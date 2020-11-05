@@ -130,3 +130,49 @@
         in ('Spayed Female', 'Neutered Male')
     )
     ```
+
+6. String, Date
+
+    [코딩테스트 연습 - 이름에 el이 들어가는 동물 찾기](https://programmers.co.kr/learn/courses/30/lessons/59047)
+
+    ```sql
+    # 이름에 'el'이 들어가는 개 찾기
+    SELECT animal_id, name
+    from animal_ins
+    where animal_type = 'Dog'
+    and name like '%el%'  # like 함수로 검색 가능, %는 제한없이, -는 1글자를 의미
+    order by name
+    ```
+
+    [코딩테스트 연습 - 중성화 여부 파악하기](https://programmers.co.kr/learn/courses/30/lessons/59409)
+
+    ```sql
+    # Neutered' 또는 'Spayed'라는 단어가 들어가면 O 아니면 X
+    SELECT animal_id, name, 
+    # mysql에서는
+    # if(조건, true결과, false결과)문을 사용한다
+    # regexp는 조건에 존재하는지 확인한다
+    if(sex_upon_intake regexp 'Neutered|Spayed', 'O', 'X') 
+    from animal_ins
+    ```
+
+    [코딩테스트 연습 - 오랜 기간 보호한 동물(2)](https://programmers.co.kr/learn/courses/30/lessons/59411)
+
+    ```sql
+    # 오래 보호한 2마리
+    SELECT a.animal_id, a.name
+    from animal_outs as a join animal_ins as b
+    on a.animal_id = b.animal_id
+    order by datediff(a.datetime, b.datetime) desc # datediff 함수
+    limit 2
+    ```
+
+    [코딩테스트 연습 - DATETIME에서 DATE로 형 변환](https://programmers.co.kr/learn/courses/30/lessons/59414)
+
+    ```sql
+    # 출력 지정
+    SELECT animal_id, name, 
+    date_format(datetime, "%Y-%m-%d") dateonly # date_format 함수⭐
+    from animal_ins
+    order by animal_id
+    ```
