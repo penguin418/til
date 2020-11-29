@@ -1,102 +1,95 @@
-## Architecture
+# Architecture⭐⭐⭐⭐⭐⭐⭐
 
-- 계층과 층
+# ARCHITECTURE BACKGROUND
 
-    계층(Tier): 물리적 분리
+계층 구조별 차이⭐🎓
 
-    층(Layer): 논리적 분리
+Tier\Layer	프리젠테이션	애플리케이션	데이터
+1계층 구조	클라이언트	클라이언트	클라이언트	수정이 힘듦
+2계층 구조	클라이언트	클라이언트	데이터		DB 수정만 용이
+3계층 구조	프런트엔드	미들 웨어	백엔드		모든 로직이 분리됨
 
-    [계층별 차이⭐🎓](https://www.notion.so/3dd57c8f87484af086f0471a014c6b4f)
+용어
 
-- SAP는 3계층 구조를 사용한다. (현행 SAP ECC의 전버전인 SAP R/3)⭐
-    1. Presentation Layer
+- 계층(Tier): 물리적 분리
+- 층(Layer): 논리(기능)적 분리
 
-        SAP GUI (for Windows, for JAVA, for HTML)
+# SAP SYSTEM
 
-    2. Application Layer
+SAP System는 3 계층으로 이루어져있다
 
-        ### Instance: Dispatcher + Work Process + Local Buffer
+- Presentation, Application, Database
 
-        Dispatcher⭐⭐⭐⭐⭐
+### Presentation Level
 
-        Work Process를 분배하는 역할을 한다
+SAP 화면을 구성한다
 
-        Shared Memory로 작업정보를 관리한다
+SAP GUI에는 for Windows, for Java, for HTML 3가지가 존재한다⭐
 
-        Work Process 종류⭐⭐⭐⭐⭐
+### Application Level
 
-        1. Dialog:
+SAP Instance는 SAP 시스템 컴포넌트들의 관리 단위(Unit)로 단일 컴퓨터 당 하나 혹은 여러 개가 존재할 수 있다. 다음 3가지가 존재한다⭐
 
-            화면을 관리한다. 시스템 당 2개 이상 있다
+1. PAS(Primary Application Server)
 
-            모든 유저가 공유한다 
+    가장 먼저 설치되어야 하는 인스턴스로 이외에는 모두 AAS(Additional AS)이다
 
-        2. Update: Update를 관리한다. 시스템 당 하나 있다
-        3. Background: 스케줄을 관리한다. Dispatcher당 하나있다
-        4. Lock Management: 락을 관리한다. 시스템 당 하나있다
-        5. Spool: 출력 프로세스를 관리한다 별로 안중요하다
+2. CSI(Central Service Instance)
 
-        Local Buffer
+    Message Server와 Enqueue Work Process를 제공한다⭐
 
-        Open SQL을 사용할 경우, Local Buffer를 사용한다
+    - Message Server는 인스턴스 간의 통신을 제공한다
+    - Enqueue Work Process는 시스템의 Logical Lock을 제공한다
+3. SAP Instance ( =AS(Application Server))
 
-        다른 Instances
+### Database Level
 
-        - Central Instance는 다음을 갖는 Instance이다
+보통 SAP는 독립적인 DBMS위에 구성된다
 
-            Message Server: User를 가장 부하가 적은 서버에 연결해준다
+DB Interface를 가지고 있어 어떤 DB라도 사용할 수 있다 (이식성이 높다)
 
-            Enqueue Work Processor: 락을 관리한다
+database에는 Cross-Client데이터, Client-Specific 데이터를가 존재한다
 
-        - Dialog Instance는 작업을 하는 Instance이다
+1. Cross-Client
 
-            load balancing을 위해 사용된다
+    Client에 상관없이 볼 수 있는 데이터로, Repository가 해당된다
 
-    3. Database Layer
-        - Database Instance
+    - Repository
 
-        SAP는 독립적인 DBMS위에 구성된다 (이식성이 높다)
+        모든 시스템 개발 도구로 구성된다
 
-        곧 SAP HANA DB만을 사용하겠다고 했다
+        Program, function module, database table definition등이 속한다
 
-## SAP GUI
+2. Client-Specific
 
-1. Command Field
+특정 Client로 로그인한 경우에만 조회할 수 있는 데이터이다
 
-    명령이 가능하다
+- Application Data
+- Customizing Data
 
-    [가능한 명령들](https://www.notion.so/f2e57e849d5b42c5b6d366d46eaaabca)
+# SAP INSTANCE
 
-    T-CODE를 사용하여 트랜잭션으로 이동할 수 있다
+각 SAP Instance는 Dispatcher, Work Process, Local Buffer로 구성된다⭐
 
-    [T-CODE](https://www.notion.so/cc174f85a5fb4def88d7a4faa5b7075f)
+1. Dispatcher⭐
 
-2. Menu Bar (메뉴바)
-3. System Toolbar (시스템툴바)
+    Presentation Level을 통합 관리한다
 
-    Enhancement, Modify가 절대 불가능하다
+    Work Process 요청을 관리(FIFO)하고 분배한다
 
-4. Application Toolbar
-5. Status Bar
+    Shared Memory로 작업정보를 관리한다
 
-## CTS
+2. Work Process 종류⭐
+    1. Dialog:
 
-Repository(=Dictionary): Client에 관계없이 볼 수 있는 Program, Data, 등등
+        화면을 관리한다. 시스템 당 2개 이상 있다
 
-ㄴApplication Component: FI, MM, CO 등등
+        모든 유저가 공유한다
 
-ㄴPackage: 관련 오브젝트
+    2. Update: Update를 관리한다. 시스템 당 하나 있다
+    3. Background: 스케줄을 관리한다. Dispatcher당 하나있다
+    4. Lock Management: 락을 관리한다. 시스템 당 하나있다
+    5. Spool: 출력 프로세스를 관리한다 별로 안중요하다
+3. Local Buffer
 
-ㄴObject: 하나의 오브젝트는 하나의 Package에만 할당 가능
-
-Dev(개발) 서버 → QAS(테스트) 서버 → PRD(운영) 서버
-
-- Change Request
-
-    수정한 내역을 다른 시스템에 반영(transport)하는 작업
-
-- 개발 기본
-
-    개발자가 개발한 프로그램의 이름은 Z, Y로 시작해야 한다
-
-    프로그램은 Save상태와 Activated버전이 존재하고, Active되야 실행가능하다
+    Open SQL을 사용할 경우, Local Buffer를 사용한다
