@@ -15,7 +15,11 @@ $ git config --list
 $ git init
 ```
 
-[git 영역](https://www.notion.so/91e6d3d96b71451db7a04081bf23338f)
+### git 영역
+
+working directory    	작업 영역
+staging area( Index )	반영 전 검토 단계
+repository ( Head )  	실제 파일 저장
 
 프로젝트 운영 -  스테이징
 
@@ -151,3 +155,27 @@ git rebase feature/message
 $ git add <수정한 파일>
 $ git rebase —continue
 ```
+
+고급 충돌 해결
+
+1. 깃이 추적중이지 않은 파일이 너무 많을 경우 모두 지움
+
+git clean -fdx
+
+2. 임시저장
+
+git stash
+
+—index로 staging을 유지가능
+
+임시저장 불러오기
+
+git stash apply
+
+인증정보 초기화
+
+git config —system —unset credential.helper
+
+베어 브랜치
+
+원격저장소의 master로 origin/master로 표현되며 checkout 할 수 없음
