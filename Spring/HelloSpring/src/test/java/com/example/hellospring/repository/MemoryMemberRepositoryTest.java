@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.Commit;
 
 public class MemoryMemberRepositoryTest {
     MemoryMemberRepository repository = new MemoryMemberRepository();
@@ -15,6 +16,7 @@ public class MemoryMemberRepositoryTest {
     }
 
     @Test
+    // @Commit // DB반영
     public void save(){
         Member member = new Member();
         member.setName("spring");
