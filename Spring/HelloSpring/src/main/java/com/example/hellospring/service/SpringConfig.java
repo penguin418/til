@@ -1,5 +1,6 @@
 package com.example.hellospring.service;
 
+import com.example.hellospring.aop.TimeTraceAOP;
 import com.example.hellospring.repository.JPAMemberRepository;
 import com.example.hellospring.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class SpringConfig
     public MemberService memberService() {
         return new MemberService(memberRepository);
     }
+
+//    @Bean // 대신 @Component 로 등록 가능
+//    public TimeTraceAOP timeTraceAOP(){
+//        return new TimeTraceAOP();
+//    }
 
 //    @Bean
 //    public MemberService memberService(){

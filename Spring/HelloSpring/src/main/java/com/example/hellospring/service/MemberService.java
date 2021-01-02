@@ -21,6 +21,13 @@ public class MemberService {
     // @Autowired
     public MemberService(MemberRepository repository){memberRepository = repository;}
 
+    // AOP
+    // 시간 측정은 비지니스 로직(핵심 관심 사항=core concern)이 아니라
+    // 공통 관심 사항(=cross-cutting concern) 이다
+    // AOP: Aspect Oriented Programming: 공통관심사항과 핵심관심사항을 나눠서
+    // 원하는 곳에 공통관심사항을 적용함
+
+
     public Long join(Member member){
         validateDuplicateMember(member);
         memberRepository.save(member);
