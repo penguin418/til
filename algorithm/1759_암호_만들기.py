@@ -21,11 +21,3 @@ for pick in combinations(chars, length[0]):
         if cntB > 1: break
     if cntA > 0 and cntB > 1:
         print(''.join(pick))
-
-# def combi(picks, picked, pA, pB):
-#     if len(picks) == length[0] and pA >= 1 and pB >= 2:
-#         print(*picks)
-#     else:
-#         for nxt in range(picked, len(chars)):
-#             picks.append(nxt)
-#             else 
