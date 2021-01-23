@@ -74,6 +74,44 @@ Date: Fri Oct 09 13:58:11 2020 + 0900
 ## --graph    : 커밋간 연결관계를 아스키 그래프로 출력
 ## -S keyword ; 코드에서 추가/제거 내역중 keyword에 해당하는 내용 검색
 
+    ```
+    <카테고리>: <메시지>
+
+    메시지 구성
+
+    fix: 버그 수정/개선 시 사용
+    fix: fixed <버그 이름> in <컴포넌트, 클래스, 모듈, ...>
+    fix: fixed <콜백지옥> in <A컴포넌트>
+
+    fix: fixed <컴포넌트,클래스,모듈, ...> which <~한 문제를 일으킴>
+    fix: fixed <A컴포넌트> which makes callback hell.
+
+    fix: fixed <문제점> to <목적>
+
+    feat: 기능 추가시 사용 
+    feat: added <새로운 기능>
+    feat: ~에 entity
+
+    docs: .md파일, ddl등 문서 수정 시 사용
+    docs: edited <문서 이름>
+    docs: modified <문서 이름 ddl 등>
+
+    style: 코드 포맷 수정 시 사용
+    style: reformated <파일 이름>
+    style: added semicolons to javascript files
+    style: broke some lines of <파일 이름>
+    		
+    refactor: 리팩토링
+    refactor: 
+
+    chores: 빌드 관련 업무
+    chores: updated build task
+    chores: updated package manager configs
+
+    chores: gradle에 ~ 추가
+    chores: 
+    ```
+
 ## 커밋된 파일 중 변경된 사항 확인
 $ git diff 
 diff --git a/argicle.js b/article.js
