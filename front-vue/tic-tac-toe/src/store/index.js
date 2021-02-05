@@ -14,32 +14,33 @@ export default new Vuex.Store({
     },
     log: [],
     turn: 'O',
-    Finished: false
+    finished: false
   },
   mutations: {
     // this.$store.commit('뮤테이션이름', { 인자 } )로 실행하는 동기 함수
     MARK_XY (state, position) {
+      if (state.finished) // 이미 종료된 게임
+          return;
+      if (state.board[position.x][position.y] !== ' ') // 놓을 수 없는 자리
+          return;
       state.board[position.x][position.y] = state.turn;
       let b = state.board
-      function checkRow(c1, c2, c3, turn){
-        return (c1.charAt(0) === turn) && (c2.charAt(0) === turn) && (c3.charAt(0) === turn);
-      }
-      function checkWin(turn){
-        return checkRow(b[0][0], b[0][1], b[0][2], turn) ||
-            checkRow(b[1][0], b[1][1], b[1][2], turn) ||
-            checkRow(b[2][0], b[2][1], b[2][2], turn) ||
-            checkRow(b[0][0], b[1][0], b[2][0], turn) ||
-            checkRow(b[0][1], b[1][1], b[2][1], turn) ||
-            checkRow(b[0][2], b[1][2], b[2][2], turn) ||
-            checkRow(b[0][0], b[1][1], b[2][2], turn) ||
-            checkRow(b[0][2], b[1][1], b[0][2], turn);
-      }
-      state.finished = checkWin(this.turn);
+      let t = state.turn
+      state.finished = ((b[0][0] == t) && (b[0][1] == t) && (b[0][2] == t))
+          || ((b[1][0] == t) && (b[1][1] == t) && (b[1][2] == t))
+          || ((b[2][0] == t) && (b[2][1] == t) && (b[2][2] == t))
+          || ((b[0][0] == t) && (b[1][0] == t) && (b[2][0] == t))
+          || ((b[0][1] == t) && (b[1][1] == t) && (b[2][1] == t))
+          || ((b[0][2] == t) && (b[1][2] == t) && (b[2][2] == t))
+          || ((b[0][0] == t) && (b[1][1] == t) && (b[2][2] == t))
+          || ((b[2][2] == t) && (b[1][1] == t) && (b[0][0] == t));
       if (! state.finished)
         if (state.turn === 'X') state.turn = 'O'; else state.turn = 'X';
     },
     RESET (state){
-      state.Finished = false;
+      state.finished = false;
+      state.log.push(state.turn)
+
       for (var i=0; i<3; i++)
         for (var j=0; j<3; j++)
           state.board[i][j] = ' '
@@ -55,11 +56,13 @@ export default new Vuex.Store({
       return state.board;
     },
     getLog (state) {
-      console.log('logic')
-      return state.log;
+      return state.log.map(el => el + ' is win');
     },
     getWinner (state) {
-      return { game: state.Finished, winner: state.turn }
+      return state.turn;
+    },
+    isFinished (state) {
+      return state.finished;
     }
   },
   modules: {
