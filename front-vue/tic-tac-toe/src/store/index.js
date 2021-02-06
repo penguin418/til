@@ -14,7 +14,9 @@ export default new Vuex.Store({
     },
     log: [],
     turn: 'O',
-    finished: false
+    winner: '',
+    finished: false,
+    cnt: 0
   },
   mutations: {
     // this.$store.commit('뮤테이션이름', { 인자 } )로 실행하는 동기 메소드
@@ -26,6 +28,7 @@ export default new Vuex.Store({
         return;
       // 배열 사용시 업데이트 유의, vue 화면 업데이트는 변수 변경이 감지되야 실행됨
       state.board[position.x][position.y] = state.turn;
+      state.cnt += 1;
       let b = state.board
       let t = state.turn
       state.finished = ((b[0][0] === t) && (b[0][1] === t) && (b[0][2] === t))
@@ -36,14 +39,18 @@ export default new Vuex.Store({
           || ((b[0][2] === t) && (b[1][2] === t) && (b[2][2] === t))
           || ((b[0][0] === t) && (b[1][1] === t) && (b[2][2] === t))
           || ((b[2][0] === t) && (b[1][1] === t) && (b[0][2] === t));
-      if (! state.finished)
-        if (state.turn === 'X') state.turn = 'O'; else state.turn = 'X';
+      if (state.finished)
+        state.winner = state.turn;
+      else if (state.cnt === 9){
+          state.winner = 'no one'
+          state.finished = true;
+      }
+      if (state.turn === 'X') state.turn = 'O'; else state.turn = 'X';
     },
     RESET (state){
+      state.cnt = 0;
       state.finished = false;
-      state.log.push(state.turn)
-
-      if (state.turn === 'X') state.turn = 'O'; else state.turn = 'X';
+      state.log.push(state.winner);
       for (let i=0; i<3; i++)
         for (let j=0; j<3; j++)
           state.board[i][j] = ' '
@@ -65,7 +72,7 @@ export default new Vuex.Store({
       return state.log.map(el => el + ' was winner');
     },
     getWinner (state) {
-      return state.turn;
+      return state.winner;
     },
     isFinished (state) {
       return state.finished;
