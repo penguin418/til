@@ -1,6 +1,11 @@
 <template>
   <div class="log">
-    {{ getLog }}
+    <ul>
+      <li v-for="(log, index) in getLog" :key="index"
+      style=" list-style-position: inside;">
+        {{ log }}
+      </li>
+    </ul>
   </div>
 </template>
 
