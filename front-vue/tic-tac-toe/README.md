@@ -1,24 +1,5 @@
-# tic-tac-toe
+![screen_shot](./img/screenshot.gif)
+vue 공부용으로 만든 tic tac toe 게임입니다
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+spa 페이지로 만들었으며, vuex를 사용하여 게임 상태와 로그를 저장합니다
+vue2.6.1을 사용합니다

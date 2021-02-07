@@ -14,34 +14,45 @@ export default new Vuex.Store({
     },
     log: [],
     turn: 'O',
-    Finished: false
+    winner: '',
+    finished: false,
+    cnt: 0
   },
   mutations: {
-    // this.$store.commit('뮤테이션이름', { 인자 } )로 실행하는 동기 함수
+    // this.$store.commit('뮤테이션이름', { 인자 } )로 실행하는 동기 메소드
+    // state 업데이트 용으로 사용해야 함
     MARK_XY (state, position) {
+      if (state.finished) // 이미 종료된 게임
+        return;
+      if (state.board[position.x][position.y] !== ' ') // 놓을 수 없는 자리
+        return;
+      // 배열 사용시 업데이트 유의, vue 화면 업데이트는 변수 변경이 감지되야 실행됨
       state.board[position.x][position.y] = state.turn;
+      state.cnt += 1;
       let b = state.board
-      function checkRow(c1, c2, c3, turn){
-        return (c1.charAt(0) === turn) && (c2.charAt(0) === turn) && (c3.charAt(0) === turn);
+      let t = state.turn
+      state.finished = ((b[0][0] === t) && (b[0][1] === t) && (b[0][2] === t))
+          || ((b[1][0] === t) && (b[1][1] === t) && (b[1][2] === t))
+          || ((b[2][0] === t) && (b[2][1] === t) && (b[2][2] === t))
+          || ((b[0][0] === t) && (b[1][0] === t) && (b[2][0] === t))
+          || ((b[0][1] === t) && (b[1][1] === t) && (b[2][1] === t))
+          || ((b[0][2] === t) && (b[1][2] === t) && (b[2][2] === t))
+          || ((b[0][0] === t) && (b[1][1] === t) && (b[2][2] === t))
+          || ((b[2][0] === t) && (b[1][1] === t) && (b[0][2] === t));
+      if (state.finished)
+        state.winner = state.turn;
+      else if (state.cnt === 9){
+          state.winner = 'no one'
+          state.finished = true;
       }
-      function checkWin(turn){
-        return checkRow(b[0][0], b[0][1], b[0][2], turn) ||
-            checkRow(b[1][0], b[1][1], b[1][2], turn) ||
-            checkRow(b[2][0], b[2][1], b[2][2], turn) ||
-            checkRow(b[0][0], b[1][0], b[2][0], turn) ||
-            checkRow(b[0][1], b[1][1], b[2][1], turn) ||
-            checkRow(b[0][2], b[1][2], b[2][2], turn) ||
-            checkRow(b[0][0], b[1][1], b[2][2], turn) ||
-            checkRow(b[0][2], b[1][1], b[0][2], turn);
-      }
-      state.finished = checkWin(this.turn);
-      if (! state.finished)
-        if (state.turn === 'X') state.turn = 'O'; else state.turn = 'X';
+      if (state.turn === 'X') state.turn = 'O'; else state.turn = 'X';
     },
     RESET (state){
-      state.Finished = false;
-      for (var i=0; i<3; i++)
-        for (var j=0; j<3; j++)
+      state.cnt = 0;
+      state.finished = false;
+      state.log.push(state.winner);
+      for (let i=0; i<3; i++)
+        for (let j=0; j<3; j++)
           state.board[i][j] = ' '
     }
   },
@@ -54,12 +65,17 @@ export default new Vuex.Store({
     getBoard (state) {
       return state.board;
     },
+    getTurn (state) {
+      return state.turn;
+    },
     getLog (state) {
-      console.log('logic')
-      return state.log;
+      return state.log.map(el => el + ' was winner');
     },
     getWinner (state) {
-      return { game: state.Finished, winner: state.turn }
+      return state.winner;
+    },
+    isFinished (state) {
+      return state.finished;
     }
   },
   modules: {
