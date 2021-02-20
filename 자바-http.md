@@ -278,19 +278,28 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
     
     - Authorization
         
-        ```sql
-        Basic <토큰>
+        이 헤더는 인증 토큰을 전달하는 헤더이다. `Authentication`이 아니다.
+        
+        ```bash
+        Authorization: <type> <credentials>
         ```
         
-        또는
+        type은 인증방식으로 종류는 Basic과 Baerer가 있다.
         
-        ```sql
-        Bearer <토큰>
-        ```
+        - Basic
+            
+            ```bash
+            Base64(<user>:<password>)
+            ```
+            
+            basic타입은 사용자의 아이디와 비밀번호를 :(콜론)으로 이어서 Base64 인코딩한 값을 사용한다. 보안을 위해 https 만 사용할 것을 권장한다
+            
+        - Bearer
+            
+            bearer 타입은 서버가 정의한 규칙을 사용한다
+            
         
-        이 헤더는 인증 토큰을 전달하는 헤더이다.
-        
-        토큰의 종류는 Basic과 Baerer가 있다.
+        credentials은 인증정보이다.
         
     - Proxy-Authorization
     
