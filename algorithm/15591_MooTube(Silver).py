@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-n, q = map(int, sys.stdin.readline())
-pqr = []
-qs = []
-for _ in range(n):
-    pqr.append(list(map(int, sys.stdin.readline())))
-for _ in range(q):
-    qs.append(list(map(int, sys.stdin.readline())))
-=======
 import sys
 
 ## 입력
@@ -42,4 +33,3 @@ for ii in range(_q):
             ## 한번 작아지면 더이상 탐사할 필요가 없다
     answers.append(ans)
 print('\n'.join(map(str, answers)))
->>>>>>> algorithm

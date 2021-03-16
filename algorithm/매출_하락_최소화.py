@@ -3,7 +3,7 @@ def dfs(sales, links, dp, cur):
         dp[cur][0] = 0
         dp[cur][1] = sales[cur-1]
     else:
-    return min(dp[cur][0], dp[cur][1])
+        return min(dp[cur][0], dp[cur][1])
 def solution(sales, links):
     answer = 0
     dp = [[0,0] for _ in range(len(sales)+1)]
