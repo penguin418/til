@@ -18,7 +18,7 @@ public class App {
             JobDetail helloJohn = JobBuilder
                     .newJob(HelloJob.class)
                     .withIdentity("helloJob001", "group001")
-                    .usingJobData("subject", "John")
+                    .usingJobData("subject", "John") // John 에게 인사하기
                     .build();
 
             Trigger helloJohnTrigger = TriggerBuilder
@@ -30,7 +30,7 @@ public class App {
             JobDetail helloJake = JobBuilder
                     .newJob(HelloJob.class)
                     .withIdentity("helloJob002", "group001")
-                    .usingJobData("subject", "Jake")
+                    .usingJobData("subject", "Jake") // Jake 에게 인사하기
                     .build();
 
             Trigger helloJakeTrigger = TriggerBuilder
@@ -40,7 +40,7 @@ public class App {
                     .build();
 
             Scheduler scheduler = schedulerFactory.getScheduler();
-            scheduler.getContext().put("helloService", helloService);
+            scheduler.getContext().put("helloService", helloService); // HelloService 전달
             scheduler.start();
             scheduler.scheduleJob(helloJohn, helloJohnTrigger);
             scheduler.scheduleJob(helloJake, helloJakeTrigger);
