@@ -3,17 +3,16 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.CouponService;
-import service.PlainCouponService;
-import service.SyncCouponService;
+import service.BackupService;
+import service.MyBackupService;
 
 class App {
     private static Logger logger = LoggerFactory.getLogger(App.class);
-    private static CouponService couponService;
+    private static BackupService couponService;
 
     public static void main(String[] args){
-        System.out.println("StaticServiceJob과 SyncCouponService의 동작을 확인한다");
-        couponService = new PlainCouponService();
+        System.out.println("@DisallowConcurrentExecution을 통해 동기화를 구현한다");
+        couponService = new MyBackupService();
 
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
         try{

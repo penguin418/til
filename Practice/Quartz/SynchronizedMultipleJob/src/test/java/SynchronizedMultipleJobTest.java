@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import service.CouponService;
 import service.SyncCouponService;
 
-public class App {
-    private static Logger logger = LoggerFactory.getLogger(App.class);
+public class SynchronizedMultipleJobTest {
+    private static Logger logger = LoggerFactory.getLogger(SynchronizedMultipleJobTest.class);
     private static CouponService couponService;
 
     public static void main(String[] args) {
