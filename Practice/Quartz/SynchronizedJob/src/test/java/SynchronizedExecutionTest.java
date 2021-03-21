@@ -1,14 +1,14 @@
 import job.SyncJob1;
+import job.SyncJob2;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.CouponService;
 import service.PlainCouponService;
-import service.SyncCouponService;
 
-class App {
-    private static Logger logger = LoggerFactory.getLogger(App.class);
+class SynchronizedExecutionTest {
+    private static Logger logger = LoggerFactory.getLogger(SynchronizedExecutionTest.class);
     private static CouponService couponService;
 
     public static void main(String[] args){
@@ -18,7 +18,7 @@ class App {
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
         try{
             JobDetail secondlyCoupon = JobBuilder
-                    .newJob(SyncJob1.class)
+                    .newJob(SyncJob2.class)
                     .withIdentity("couponJob1", "group001")
                     .build();
 
