@@ -1,3 +1,0 @@
-dependencies {
-    // root build gradle 외 추가적인 dependency 를 사용하지 않고 있습니다
-}

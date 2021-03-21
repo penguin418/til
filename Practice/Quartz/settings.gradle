@@ -2,5 +2,4 @@ rootProject.name = 'Quartz'
 include 'HelloJob'
 include 'SynchronizedJob'
 include 'SynchronizedMultipleJob'
-include 'ChainJob'
 
