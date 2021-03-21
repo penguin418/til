@@ -22,18 +22,20 @@ HelloService를 사용해서 John과 Jake에게 1초마다 인사합니다
   
   Execution 내부에 synchronized 구문을 사용하는 방법입니다
   ``` java
-  @Override
-  public void execute(JobExecutionContext context) throws JobExecutionException {
-      synchronized (couponService) {
-          logger.info("execute");
-          couponService.issueCoupon();
-          try {
-              Thread.sleep(1000);
-          } catch (InterruptedException e) {
-              e.printStackTrace();
-          }
-      }
-  }
+    ...
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        synchronized (couponService) {
+            logger.info("execute");
+            couponService.issueCoupon();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    ...
   ```
 
 ## Synchronized Multiple Job
