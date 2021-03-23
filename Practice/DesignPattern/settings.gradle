@@ -1,5 +1,6 @@
 rootProject.name = 'DesignPattern'
 include 'Singleton'
 include 'ThreadSafeSingleton'
+include 'JavaBuilder'
 include 'Builder'
 
