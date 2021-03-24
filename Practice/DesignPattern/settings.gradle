@@ -3,4 +3,5 @@ include 'Singleton'
 include 'ThreadSafeSingleton'
 include 'JavaBuilder'
 include 'Builder'
+include 'AbstractFactory'
 

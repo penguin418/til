@@ -10,6 +10,8 @@
 
   객체 생성/조합을 캡슐화합니다
 
+  객체의 생성은 결합도를 강하게 만들며, 강한 결합도는 유지보수를 어렵게 만듧니다
+
 * 구조 패턴
 
   클래스나 객체를 조합해 더 큰 구조를 만드는 패턴입니다
@@ -112,4 +114,34 @@
                                  .shot(1).water(7).build();
       Assertions.assertNotEquals(espresso, americano);
     }
+  ```
+
+## 팩토리 메소드
+
+* 목적
+
+  팩토리 클래스 객체에 분기에 따라 객체를 다르게 생성하는 역할을 위임합니다
+* 동기
+  
+  분기에 따라 객체를 다르게 생성해야 하는 작업이 있습니다
+
+  이 작업을 여러번 반복하는 경우, 생성하는 작업을 다른 객체에 위임하여 결합도를 낮춥니다.
+
+* 추가적으로 Factory 메소드는 각 객체를 생성하는 작업으로 인해 클래스가 큰 경우가 많습니다.
+  
+  이때, Singleton 을 사용하면 객체 생성 시간을 절약할 수 있습니다 
+  ``` java
+  public class Test {
+      static class Window1 {
+          private final List<Shape> shapes = new ArrayList<>();
+  
+          public Window1(List<ShapeType> shapeTypes){
+              for (ShapeType shapeType : shapeTypes){
+                  Shape shape = ShapeFactory
+                                  .getInstance()
+                                  .getShape(shapeType);
+                  this.shapes.add(shape);
+              }
+          }
+          ...
   ```
