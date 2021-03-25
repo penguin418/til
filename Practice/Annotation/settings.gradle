@@ -1,3 +1,4 @@
 rootProject.name = 'Annotation'
 include 'Comment'
+include 'Validator'
 
