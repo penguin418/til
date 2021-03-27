@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 public class MyClass {   // TypeElement
 
     private List<Character> randomCharacters; // VariableElement
-    @XXX("length가 작동하지 않는데")
+    @XXX("length가 작동하지 않아요")
     private Integer length;            // VariableElement
 
-    @Todo("randomString을 list에서 final String으로 리팩토링 예정")
+    @Todo("randomString을 list에서 final String으로 리팩토링 예정입니다")
     public MyClass(List<Character> randomCharacters, Integer length) {
         this.randomCharacters = randomCharacters;
 //        this.length = length;

@@ -43,23 +43,36 @@ public class KeywordProcessor extends AbstractProcessor {
             } else if (annotation == XXX.class) {
                 handleXXXMsg(annotatedElement);
             }
+//            if (annotatedElement.getKind() != ElementKind.ANNOTATION_TYPE){
+//                messager.printMessage(Diagnostic.Kind.ERROR, "hello");
+//            }
 
+
+//            if (annotatedElement.getKind() != ElementKind.CONSTRUCTOR) {
+//                messager.printMessage(Diagnostic.Kind.WARNING, "@BuilderFactory only support constructor", annotatedElement);
+//                throw new IllegalStateException();
+//            }
+//            // 오예, 생성자입니다. 이제 생성자로 형변환해도 됩니다
+//            ExecutableElement constructor = (ExecutableElement) annotatedElement;
+//            for (VariableElement param : constructor.getParameters()) {
+//                System.out.println(param + ":" + param.getClass());
+//            }
         }
     }
 
     private void handleTodoMsg(Element element) {
-        String msg = element.getAnnotation(Todo.class).value();
+        String msg = "[TODO]" + element.getAnnotation(Todo.class).value();
         messager.printMessage(Diagnostic.Kind.WARNING, msg, element);
     }
 
     private void handleFixMeMsg(Element element) {
-        String msg = element.getAnnotation(FixMe.class).value();
+        String msg = "[FixMe]" + element.getAnnotation(FixMe.class).value();
         String suggestions = String.join(",", element.getAnnotation(FixMe.class).suggestions());
         messager.printMessage(Diagnostic.Kind.WARNING, msg + suggestions, element);
     }
 
     private void handleXXXMsg(Element element) {
-        String msg = element.getAnnotation(XXX.class).value();
+        String msg = "[XXX]" + element.getAnnotation(XXX.class).value();
         String suggestions = String.join(",", element.getAnnotation(XXX.class).suggestions());
         messager.printMessage(Diagnostic.Kind.WARNING, msg + suggestions, element);
     }
