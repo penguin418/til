@@ -2,6 +2,7 @@ import validator.Validator;
 
 public class Test {
     public static void main(String[] args) throws IllegalAccessException {
+
         try {
             RegisterForm form = new RegisterForm("email", "password", "010-1010-0102");
             System.out.println("validated!");

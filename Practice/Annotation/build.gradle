@@ -5,12 +5,15 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    compileJava.options.encoding  = 'UTF-8'
+    compileTestJava.options.encoding =  'UTF-8'
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
     group 'org.example'
     version '1.0-SNAPSHOT'
-
-    compileJava.options.encoding = "UTF-8"
-    compileTestJava.options.encoding = "UTF-8"
 
     repositories {
         mavenCentral()
@@ -20,5 +23,6 @@ subprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     }
+
 }
 

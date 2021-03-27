@@ -50,7 +50,7 @@
       public void updateUsername(java.lang.String username)
       ```
 
-## Validator (Runtime Annotation 예제)
+## Validator (Runtime Annotation 연습)
 
 필드 타입에 대한 검증 로직을 담은 annotation 입니다
 
