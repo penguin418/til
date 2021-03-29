@@ -25,3 +25,17 @@ def solution(board):
 
 solution([[0,1,1,1],[1,1,1,1],[1,1,1,1],[0,0,1,0]])
 
+
+    # 더 좋은 풀이
+    # 1 1 1
+    # 1 2 2 <- 오른쪽 끝 2는 이미 4개의 사각형을 포함한다
+    # 1 2[3] <- 위로 검사할 필요도 없음 ㅋㅋㅋ
+
+def solution2(board):
+    side = len(board)
+    for i in range(side): # 행
+        for j in range(side): # 열
+            if i>0 and j>0 and board[i][j]>0:
+                board[i][j] = min(board[i-1][j-1], board[i-1][j], board[i][j-1]) + 1
+    print(board)
+solution2([[0,1,1,1],[1,1,1,1],[1,1,1,1],[0,0,1,0]])
