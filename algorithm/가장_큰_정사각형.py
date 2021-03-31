@@ -1,3 +1,4 @@
+# 출처: 프로그래머스 코딩 테스트 연습, https://programmers.co.kr/learn/challenges
 def solution(board):
     # 보드에서 가장 큰 면적을 젚을 수 있는 정사각형을 찾는 문제
     # 작은 정사각형을 모으면 큰 정사각형이 됨을 이용한다

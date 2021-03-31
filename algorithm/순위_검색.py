@@ -1,3 +1,4 @@
+# 출처: 프로그래머스 코딩 테스트 연습, https://programmers.co.kr/learn/challenges
 # 검색될 모든 경우의 수 추가
 from collections import defaultdict
 def hashinfo(cols, depth, res):
