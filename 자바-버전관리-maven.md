@@ -35,49 +35,49 @@ POM의 구성
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-		<groupId>org.springframework</groupId>
-    <artifactId>gs-maven</artifactId>
-    <packaging>jar</packaging>
-    <version>0.1.0</version>
-		
-		<properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+  <modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework</groupId>
+  <artifactId>gs-maven</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1.0</version>
+	
+	<properties>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-						<scope>test</scope>
-        </dependency>
-    </dependencies>
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.2.4</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>shade</goal>
-							</goals>
-							<configuration>
-								<transformers>
-									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-										<mainClass>hello.HelloWorld</mainClass>
-									</transformer>
-								</transformers>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</build>
+  <dependencies>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.12</version>
+					<scope>test</scope>
+      </dependency>
+  </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>hello.HelloWorld</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 ```
 
@@ -99,14 +99,14 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-		<groupId>org.springframework</groupId>
-    <artifactId>gs-maven</artifactId>
-		<name>test</name>
-    <version>0.1.0</version>
-    <packaging>jar</packaging>
+  <modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework</groupId>
+  <artifactId>gs-maven</artifactId>
+	<name>test</name>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
 
-		<!--properties, dependencies, build 작성-->
+	<!--properties, dependencies, build 작성-->
 
 </project>
 ```
@@ -150,10 +150,10 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 ### properties (속성)
 
 ```jsx
-		<properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+	<properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 ```
 
 반복해서 사용할 상수 값을 정의한다
@@ -167,14 +167,14 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 ### dependencies (의존성)
 
 ```jsx
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-						<scope>test</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+			<scope>test</scope>
+    </dependency>
+  </dependencies>
 ```
 
 의존성 정보를 담는다
@@ -222,14 +222,14 @@ excluded dependencies(의존성 제외)
 
 ```jsx
 <dependency>
-		<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-web</artifactId>
-				<exclusions>
-				<exclusion>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-		</exclusions>
+	<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+		<exclusions>
+		<exclusion>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+		</exclusion>
+	</exclusions>
 </dependency>
 ```
 
@@ -256,13 +256,13 @@ optional dependencies(의존성 선택)
 
 ```jsx
 <dependencyManagement>
-		<dependencies>
-				<dependency>
-						<groupId>org.springframework.data</groupId>
-						<artifactId>spring-data-jpa</artifactId>
-						<version>${spring.data.version}</version>
-				</dependency>
-		</dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring.data.version}</version>
+		</dependency>
+	</dependencies>
 <dependencyManagement>
 ```
 
@@ -289,30 +289,30 @@ E 라이브러리 -> D(버전2)
 ### build (빌드 설정)
 
 ```jsx
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.2.4</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>shade</goal>
-							</goals>
-							<configuration>
-								<transformers>
-									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-										<mainClass>hello.HelloWorld</mainClass>
-									</transformer>
-								</transformers>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>hello.HelloWorld</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 ```
 
 프로젝트의 디렉토리 구조를 명시할 수 있다
@@ -331,12 +331,12 @@ E 라이브러리 -> D(버전2)
     여러 개도 사용가능하다
 
     ```jsx
-    		<repositories>
-    				<repository>
-    						<id>oracle</id>
-    						<url>http://maven.jahia.org/maven2</url>
-    				</repository>
-    		</repositories>
+    	<repositories>
+    		<repository>
+    			<id>oracle</id>
+    			<url>http://maven.jahia.org/maven2</url>
+    		</repository>
+    	</repositories>
     ```
 
     - 예제는 기본 저장소인 maven 중앙 저장소를 가리킨다
@@ -360,37 +360,37 @@ E 라이브러리 -> D(버전2)
     ```jsx
     <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    		<modelVersion>4.0.0</modelVersion>
-    		
-    		<groupId>com.mycompany.app</groupId>
-    		<artifactId>app</artifactId>
-    		<version>1.0-SNAPSHOT</version>
-    		<packaging>pom</packaging>
-    		
-    		<modules>
-    				<module>my-app</module>
-    				<module>my-webapp</module>
-    		</modules>
+    	<modelVersion>4.0.0</modelVersion>
+    	
+    	<groupId>com.mycompany.app</groupId>
+    	<artifactId>app</artifactId>
+    	<version>1.0-SNAPSHOT</version>
+    	<packaging>pom</packaging>
+    	
+    	<modules>
+    		<module>my-app</module>
+    		<module>my-webapp</module>
+    	</modules>
     </project>
     ```
 
 - 자식 모듈
 
     ```jsx
-    		...
-    		<dependencies>
-    				<dependency>
-    						<groupId>com.mycompany.app</groupId>
-    						<artifactId>my-app</artifactId>
-    						<version>1.0-SNAPSHOT</version>
-    				</dependency>
-    				...
-    		</dependencies>
-    		<parent>
-    				<groupId>com.mycompany.app</groupId>
-    				<artifactId>app</artifactId>
-    				<version>1.0-SNAPSHOT</version>
-    		</parent>
+    	...
+    	<dependencies>
+    		<dependency>
+    			<groupId>com.mycompany.app</groupId>
+    			<artifactId>my-app</artifactId>
+    			<version>1.0-SNAPSHOT</version>
+    		</dependency>
+    			...
+    	</dependencies>
+    	<parent>
+    		<groupId>com.mycompany.app</groupId>
+    		<artifactId>app</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+    	</parent>
     ```
 
     출처: [https://maven.apache.org/guides/getting-started/index.html](https://maven.apache.org/guides/getting-started/index.html)
