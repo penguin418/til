@@ -1,5 +1,201 @@
 # 몽고db
 
+### MongoDB설치
+
+mongodb는 메모리 관리를 운영체제에 맡김, 메모리 관리를 잘하는 unix가 유리
+
+### Mongodb실행
+
+1. 설치 확인
+
+    데이터 저장용 폴더 생성
+
+    ```sql
+    mkdir data
+    ```
+
+    몽고 db실행
+
+    ```sql
+    mongod -dbpath <데이터 저장용 폴더 경로>
+    ```
+
+    몽고 db 클라이언트실행
+
+    ```sql
+    mongo
+    ```
+
+    클라이언트 명령어
+
+    show dbs: 용량 확인
+
+    show collections: 컬렉션 확인
+
+2. 서비스 실행
+
+    설정 파일 생성
+
+    ```sql
+    # mongodb.conf
+    dbpath = /..../var/data
+    logpath = /.../var/log/logs.log
+    logappend = true
+    rest = true
+    directoryperdb = true
+    ```
+
+    서비스 등록
+
+    ```sql
+    mongod --config <설정파일 경로> --install
+    ```
+
+    이후 실행하지 않아도 자동 실행됨
+
+3. 서비스 종료
+
+    ```sql
+    몽고db 클라이언트 쉘> use admin;
+    몽고db 클라이언트 쉘> db.shutdownServer();
+    ```
+
+# MongoDB Shell
+
+데이터베이스 조회
+
+- 각 컬렉션들의 용량 확인
+
+    ```sql
+    > show dbs
+    ```
+
+- 컬렉션 조회
+
+    ```sql
+    > show collections
+    ```
+
+    * 컬렉션에는 스키마가 존재하지 않는다
+
+기본적인 자바스크립트 명령
+
+- 할당(var를 쓰지 않아도 된다)
+
+    ```sql
+    > a = 5;
+    5
+    ```
+
+- 사칙연산
+
+    ```sql
+    > a + 10;
+    15
+    ```
+
+- 반복문
+
+    ```sql
+    > for(i=0;i<3;i++) { print("hello"); };
+    hello
+    hello
+    hello
+    ```
+
+- json 데이터 저장
+
+    ```sql
+    > var a = { age: 15 };
+    {
+      "age": 15
+    }
+    ```
+
+데이터 추가
+
+- save 명령
+
+    ```sql
+    > db.scores.save( {a:99} )
+    "ok"
+    ```
+
+    만약 db에 scores라는 컬렉션이 존재하지 않는 경우, 생성해 준다
+
+- find 명령
+
+    ```sql
+    > db.scores.find();
+    [
+    	{ "a": 99, "_id": { "$oid": "312314213..." } }
+    ]
+    ```
+
+- 자바스크립트 문법을 함께 사용할 수 도 있다
+
+    ```sql
+    > for(i=0;i<3;i++) { db.scores.save( { b: i } );
+    "ok"
+    > db.scores.find();
+    [
+    	{ "a": 99, "_id": { "$oid": "312314213..." } }
+    	{ "b": 1, "_id": { "$oid": "537314213..." } }
+    	{ "b": 0, "_id": { "$oid": "964735213..." } }
+    	{ "b": 2, "_id": { "$oid": "274383613..." } }
+    ]
+    ```
+
+데이터 조회
+
+- find명령
+
+    아무 인자 없이 사용하는 find명령은 모든 속성을 가져온다
+
+    인자를 주어 조건에 맞는 값을 찾을 수 있다
+
+    and연산
+
+- find 명령 (비교 연산자)
+
+    ```sql
+    > db.socres.find( {a: { $gt: 15 } } );
+    [
+    	****{ "a": 99, "_id": { "$oid": "312314213..." } }
+    ]
+    > db.socres.find( {b:2 } );
+    [
+    	{ "b": 2, "_id": { "$oid": "274383613..." } }
+    ]
+    ```
+
+    gt: >, lt: <, gte: ≥, lte: ≤, ne: ≠, 
+
+    in: [ ], nin: [ ]
+
+- find명령 (논리연산자)
+
+    ```sql
+    > db.socres.find( {a: { $gt: 15, $lt: 99 } } );
+    []
+    ```
+
+    ```sql
+    > db.socres.find( $or: [{'a':{"$gt":15}},{'a':{"$lt":99}}] );
+    []
+    ```
+
+- find명령 (field 존재여부)
+
+    ```sql
+    > db.scores.find( {a: ($exists: true} } );
+    [
+    	{ "a": 99, "_id": { "$oid": "312314213..." } }
+    ]
+    ```
+
+- use <db이름>
+
 ## MongoDB 특징
 
 - c++로 개발됨
