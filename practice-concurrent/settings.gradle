@@ -1,0 +1,4 @@
+rootProject.name = 'practice-concurrent'
+include 'lock'
+include 'synchronized'
+
