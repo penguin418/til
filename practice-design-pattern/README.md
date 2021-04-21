@@ -165,3 +165,47 @@
 * 자바에선 Clonable 인터페이스를 통해 프로토타입을 빠르게 구현할 수 있도록 지원합니다
 
   Primitive 타입만 사용된 경우, Clone 메소드에서 super.clone()을 수행하는 것만으로 복사 메소드를 만들 수 있습니다.
+
+
+# Command 패턴 (행위 패턴)
+
+* 목적
+
+  실행될 기능(메서드)을 객체로 캡슐화하여 여러 기능을 실행할 수 있는 클래스를 생성합니다
+
+  실행될 기능 변경에도 호출자 클래스를 변경없이 사용하고 싶을 때 사용됩니다
+
+### Command 패턴 2
+
+command 패턴을 사용한 undo 기능
+
+* Headfirst 책에서 다룬 command 패턴
+
+command 패턴은 기능을 객체화하였기 때문에 자료구조를 통해 목록을 관리할 수 있습니다.
+메멘토 패턴은 과거의 특정 상태를 복구하는 기능인 반면,
+반면 커맨드 패턴은 모든 과거 이력을 순서대로 기록하기 때문에, 데이터베이스와 관련된 작업에서 적합합니다.
+* Command는 execute와 그것을 되돌리는 undo를 구현해야 합니다
+  ```java
+  public interface ICommand {
+      public void execute();
+      public void undo();
+  }
+  ```
+* CommandManager는 실행과 동시에 상태를 기록합니다
+  ```java
+  public class CommandManager {
+      private Stack<ICommand> undos = new Stack<>();
+      private Stack<ICommand> redos = new Stack<>();
+  
+      public void execute(ICommand command){
+          command.execute();
+          undos.add(command);
+      }
+  
+      public void undo(){
+          ICommand command = undos.pop();
+          command.undo();
+          redos.add(command);
+      }
+      ...
+  

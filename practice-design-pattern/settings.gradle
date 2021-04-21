@@ -5,4 +5,5 @@ include 'JavaBuilder'
 include 'Builder'
 include 'AbstractFactory'
 include 'Prototype'
+include 'Command2'
 
