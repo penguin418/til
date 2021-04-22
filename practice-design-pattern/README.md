@@ -175,6 +175,75 @@
 
   실행될 기능 변경에도 호출자 클래스를 변경없이 사용하고 싶을 때 사용됩니다
 
+### Command 패턴 1
+
+객체화된 메서드를 사용하여 실제(추가) 구현이 완성되었을 때, 기존 클래스의 변경없이 기능 추가를 쉽게 할 수 있다
+
+* GoF에서 다룬 command 패턴
+
+* 실행할 메서드를 객체화해서 보관한다
+  ```java
+  public class Invoker {
+  
+      public void execute(ICommand command) {
+          command.execute();
+      }
+  }
+  ```
+
+* 실제 구현 계획이나, 추가 구성 이전의 쉬운 구현
+  ```java
+  public class PlainHelloCommand implements ICommand{
+  
+      @Override
+      public void execute() {
+          // 복잡한 행동 1
+          System.out.println("hello");
+      }
+  }
+  ```
+* 추가 기능 혹은 실제 구현
+  ```java
+  public class HtmlPrinter {
+      private String head;
+      private String body;
+  
+      public HtmlPrinter init(){
+          this.head = "";
+          this.body = "";
+          return this;
+      }
+  
+      ...
+    
+      public HtmlPrinter div(String msg){
+          return this.div(msg, null);
+      }
+      public HtmlPrinter div(String msg, HtmlPrinter htmlPrinter){
+          this.body = "<div "+msg+">" + (htmlPrinter != null ? htmlPrinter.getBody() : "") +"</div>";
+          return this;
+      }
+      public HtmlPrinter p(String msg){
+          return this.p(msg, null);
+      }
+      
+      ...
+  
+      public String getBody(){
+          return this.body;
+      }
+  
+      public String getFullHtml(){
+          return "<html><head>"
+                  + this.head
+                  + "</head>"
+                  + "<body>"
+                  + this.body
+                  + "</body>";
+      }
+  }
+  ```
+
 ### Command 패턴 2
 
 command 패턴을 사용한 undo 기능

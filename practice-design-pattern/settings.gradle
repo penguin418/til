@@ -6,4 +6,4 @@ include 'Builder'
 include 'AbstractFactory'
 include 'Prototype'
 include 'Command2'
-
+include 'Command1'
