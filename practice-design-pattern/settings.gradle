@@ -7,3 +7,5 @@ include 'AbstractFactory'
 include 'Prototype'
 include 'Command2'
 include 'Command1'
+include 'TemplateMethod'
+

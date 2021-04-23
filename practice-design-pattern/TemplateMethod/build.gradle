@@ -1,0 +1,4 @@
+dependencies {
+    compile project(path: ':TemplateMethod', configuration: 'compile')
+    implementation('org.jsoup:jsoup:1.13.1')
+}

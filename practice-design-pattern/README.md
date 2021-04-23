@@ -166,6 +166,66 @@
 
   Primitive 타입만 사용된 경우, Clone 메소드에서 super.clone()을 수행하는 것만으로 복사 메소드를 만들 수 있습니다.
 
+# TemplateMethod 패턴 (행위 패턴)
+
+작업의 일부분을 서브 클래스로 캡슐화해서 서브 클래스에서 구현합니다. 특정 단계의 작업을 바꿀 수 있습니다
+
+* 전체적 알고리즘은 상위 클래스에서 구현되며, 일부분만 하위 클래스에서 구현됩니다 `프레임워크`에서 주로 사용되는 설계 기법입니다
+
+구성
+
+* abstract class : 템플릿 메서드를 정의
+
+  템플릿 메서드는 프로그램의 전체 흐름을 정의한 메서드로, 보통은 final 키워드로 오버라이드를 막습니다.
+
+* concrete class : 실제 로직을 구현하는 클래스
+  
+* AbstractNewsParser (abstract class)
+  
+  프레임 워크의 전체적인 형상을 정의한다
+  ```java
+  // abstract class
+  public abstract class AbstractNewsParser {
+  private String title;
+  private String body;
+  
+      public abstract String findTitle(Document doc);
+  
+      public abstract String findBody(Document doc);
+  
+      public final void parse(String url) {
+          try {
+              Document doc = Jsoup.connect(url).get();
+              this.title = findTitle(doc);
+              this.body = findBody(doc);
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+      ...
+  ```
+
+* DaumNewParser (concrete class)
+
+  실제 동작을 정의한다
+  ```java
+  import org.jsoup.nodes.Document;
+  
+  public class DaumNewParser extends AbstractNewsParser {
+      @Override
+      public String findTitle(Document doc) {
+          return doc.body()
+                  .select("#head_view").text();
+      }
+  
+      @Override
+      public String findBody(Document doc) {
+          return doc.body()
+                  .select("#harmonyContainer").text();
+      }
+  }
+  ...
+  ```
 
 # Command 패턴 (행위 패턴)
 
