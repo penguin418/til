@@ -1,5 +1,28 @@
 ## 병렬 프로그래밍
+## sync/async: 작업 종료 알림의 여부
 
+- async는 보통 콜백을 사용해서 작업 종료를 알려준다
+
+    이벤트 처리 주의
+
+- sync는 작업 종료 확인을 직접한다
+
+    데이터 흐름이 간결하다
+
+## block/non-block: 제어권을 넘겨주는 지의 여부
+
+- block은 함수 호출후 제어권이 넘어오지 않는 경우이다
+
+    직관적이다
+
+- non-block은 작업 시작 후 즉시 제어권을 회복한다
+
+    busy wait 주의
+
+1. read/write: 끝날 때(sync)까지 대기한다(block)
+2. polling: 호출 후 즉시 리턴(non-block)하여 주기적으로 완료 여부를 직접 확인(sync)한다
+3. multiplexing: 하나의 소켓을 공유하여 시스템 호출(async)까지 대기(block)한다 
+4. aio: 호출 후 즉시 리턴(non-block)하고 작업이 종료될 경우, signal이나 callback으로 알려(async)준다
 ### 쓰레드
 
 쓰레드 라이프 사이클
