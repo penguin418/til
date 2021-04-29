@@ -1,0 +1,26 @@
+allprojects {
+    group 'org.example'
+    version '1.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    group 'org.example'
+    version '1.0-SNAPSHOT'
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.slf4j:slf4j-api:1.7+'
+        implementation ('ch.qos.logback:logback-classic:1.1.2'){
+            exclude group: 'org.slf4j', module: 'slf4j-api'
+        }
+        compile 'org.jsoup:jsoup:1.11.3'
+    }
+}

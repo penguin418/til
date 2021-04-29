@@ -1,0 +1,11 @@
+rootProject.name = 'practice-jsoup'
+include 'basic-parsing'
+include 'local-parsing'
+include 'realtime-parsing'
+include 'session'
+include 'parsing-header'
+include 'select-elem'
+include 'select-attr'
+include 'select-selector'
+
+
