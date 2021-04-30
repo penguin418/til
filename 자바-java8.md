@@ -161,3 +161,4 @@
     ForkJoinPool pool = new ForkJoinPool(Runtime.getRunTime().availableProcessors());
     pool.invoke(task);
     ```
+출처: https://www.oreilly.com/content/java7-features/
