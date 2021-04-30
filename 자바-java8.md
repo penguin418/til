@@ -82,4 +82,82 @@
 
     - filter
     - map
-    -
+
+자바7의 변경사항
+
+1. 생성 타입 생략 (다이아아몬드 오퍼레이터)
+
+    ```java
+    Map<String, Integer> scoreMap = new HashMap<>();
+    ```
+
+2. 스트링 스위치
+
+    스트링 사용 가능~
+
+    ```java
+    switch(error.getMessage()){
+    case "password": ...
+    case "username": ...
+    }
+    ```
+
+3. 오토 클로저블 (try with resource)
+
+    알아서 close해주는 auto closable (또는 auto disposable)
+
+    ```java
+    try(
+    	FileChannel inChannel = (new FileInputStream(SRC_FILE_NAME)).getChannel();
+    	FileChannel outChannel = (new FileOutputStream(DEST_FILE_NAME)).getChannel();
+    ){
+    	outChannel.transferFrom(inChannel, 0, Long.MAX_VALUE);
+    }catch( ... )
+    ```
+
+4. 멀티 예외 타입
+
+    A | B | C 로 받을 수 있다. 서로 상속 관계에 속하면 안된다
+
+    ```java
+    try{
+    	...
+    }catch(UTFDataFormatException | InterruptedIOException e){
+    }
+    ```
+
+5. NIO.file 패키지
+
+    Paths 지원
+
+    ```java
+    Path path = Paths.get("c:\Temp\temp");
+    path.getNameCount(); // 2, 경로 내 노드 개수
+    path.getFileName(); // temp.txt
+    path.getRoot(); // c:
+    path.getParent()); // c:\Temp 
+    ```
+
+    파일 감시
+
+    ```java
+    WatchService  watchService = FileSystems.getDefault().newWatchService();
+    path.register(watchService, ENTRY_CREATE, ENTRY_MODIFY,ENTRY_DELETE);
+    while(True){
+    	WatchKey key = watchService.take();
+    	for (WatchEvent<?> e: key.pollEvents()){
+    		// kind 와 context 를 통해 파일과 이벤트 종류를 알 수 있다
+    	}
+    }
+    ```
+
+6. 포크조인
+
+    RecursiveAction(반환x), RecursiveTask(반환o) 클래스를 생성하여, 분할 정복 작업을 수행할 수 있음
+
+    Sub Task로 분리 후, 분할정복 수행
+
+    ```java
+    ForkJoinPool pool = new ForkJoinPool(Runtime.getRunTime().availableProcessors());
+    pool.invoke(task);
+    ```
