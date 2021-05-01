@@ -1,28 +1,47 @@
+참고: [https://youtu.be/mTGdtC9f4EU](https://youtu.be/mTGdtC9f4EU) 와 [http://tutorials.jenkov.com/](http://tutorials.jenkov.com/)
+
 ## 병렬 프로그래밍
-## sync/async: 작업 종료 알림의 여부
 
-- async는 보통 콜백을 사용해서 작업 종료를 알려준다
+목차 (계획 포함)
 
-    이벤트 처리 주의
+- 병행성과 병렬성
+- 쓰레드 기본
+- 쓰레드 지원 컬렉션
+    - 데이터 전달(단방향)
+    - 데이터 전달(양방향)
+- Executors
+- low-level sync
+    - Lock, Condition
+- high-level sync
+    - cyclicBarrier
+    - CountDownLatch
+    - Semaphore
+    - Exchanger
+- Atomic operation
 
-- sync는 작업 종료 확인을 직접한다
+### 병행성(Concurrecny)과 병렬성(Parallelism)
 
-    데이터 흐름이 간결하다
+- 병행성
 
-## block/non-block: 제어권을 넘겨주는 지의 여부
+    모든 태스크가 동시에 실행되는 것처럼(cpu를 나눠써서) 보이는 것
 
-- block은 함수 호출후 제어권이 넘어오지 않는 경우이다
+    방법
 
-    직관적이다
+    - 시분할(cpu상)
+    - 생산 소비 패턴
+- 병렬성
 
-- non-block은 작업 시작 후 즉시 제어권을 회복한다
+    실제로(다른 cpu에서) 동시에 처리되는 것
 
-    busy wait 주의
+    - 암달의 법칙
 
-1. read/write: 끝날 때(sync)까지 대기한다(block)
-2. polling: 호출 후 즉시 리턴(non-block)하여 주기적으로 완료 여부를 직접 확인(sync)한다
-3. multiplexing: 하나의 소켓을 공유하여 시스템 호출(async)까지 대기(block)한다 
-4. aio: 호출 후 즉시 리턴(non-block)하고 작업이 종료될 경우, signal이나 callback으로 알려(async)준다
+    방법
+
+    - 데이터 병렬: 동일 연산을 나누어 실행
+    - 태스크 병렬: 여러 작업을 나누어 실행
+
+    관련 문제:
+
 ### 쓰레드
 
 쓰레드 라이프 사이클
@@ -158,11 +177,37 @@ class Daemon implements Runnable{
 }
 ```
 
-# Executor
+# Executors
 
-자바에서 동기화를 실행하는 방법
+쓰레드 풀을 관리하기 위한 라이브러리로 자바5에서 추가됬다
 
-태스크와 쓰레드를 관리해준다
+리턴값이 없는 Runnable 과 리턴값이 존재하는 Callable을 관리할 수 있다
+
+자바 8 이후로는 FunctionalInterface가 도입되었다
+
+- Runnable
+
+    ```java
+    @FunctionalInterface
+    public interface Runnable {
+        public abstract void run();
+    }
+    ```
+
+- Callable
+
+    ```java
+    @FunctionalInterface
+    public interface Callable<V> {
+        V call() throws Exception;
+    }
+    ```
+
+쓰레드 풀 생명주기 관리를 지원해준다
+
+- 쓰레드 생성
+- 쓰레드 동작
+- 처리 완료된 쓰레드 제거
 
 ## ExecutorService
 
@@ -172,15 +217,82 @@ class Daemon implements Runnable{
 
 - execute(Runnable task)
 
-    Runnable을 바로 실행한다
+    Runnable(리턴값이 없는 쓰레드)을 바로 실행한다
+
+    execute 는 `runnable` 만 실행시킬 수 있다
+
+    만약, 에러가 발생 시 실행 쓰레드는 쓰레드 풀에서 바로 삭제된다
+
+    ExecutorService가 상속받는 Executor 인터페이스에 정의되어있다
+
+    ```java
+    public interface Executor {
+        void execute(Runnable command);
+    }
+    ```
+
+- submit(Runnable task)
+
+    ExecutorService 에 추가한다. 
+
+    이후, 내부 스케줄링에 의해 적절하게 수행된다
+
+    만약, 에러가 발생 시 에러 출력 후, 실행 쓰레드는 쓰레드 풀 끝에 다시 추가된다
+
+- submit(Runnable task, V result)
+
+    Runnable은 값을 반환하지 않는 만큼,
+
+    완료 시 반환 할 값( 상수 )을 result에 추가하려 호출 할 수 있다
+
+    Future<V> 타입을 통해 리턴값을 반환할 수 있다
 
 - submit(Callable<T> task)
-- submit(Runnable task)
+
+    Callable은 값을 반환하는 만큼,
+
+    Future<V> 타입을 통해 리턴값을 반환할 수 있다
+
 - shutdown()
 
     종료한다
 
+    이때, awaitTermination(long timeout, TimeUnit unit) 를 추가로 호출하여 전체 작업이 끝날 때 까지 기다릴 수 있다
+
+    ```java
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    while (true) {
+        executorService.execute(new TaskA());
+    }
+    executorService.shutdown(); // 종료하기
+
+    try {
+    		boolean finished; // timeout 덕분에 정상, 비정상 종료 여부를 파악할 수 있다
+        finished = executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
+        if (!finished)
+            // TODO: 아직 안 끝났음
+    } catch (InterruptedException ignored) {}
+    // finished 의 기본값을 false로 두고 finally에서 처리하는 것도 괜찮을 것 같다
+    ```
+
 - shutdownNow()
+- invokeAll()
+
+    다수의 태스크를 한번에 실행할 수 있다
+
+    ```java
+    List<Callable<Integer>> taskList = ...
+    List<Future<Integer>> resultList = executorService.invokeAll( taskList );
+    ```
+
+- invokeAny()
+
+    다수의 태스크를 실행하지만, 처음으로 성공한 태스크의 결과만 리턴하고 나머지는 취소한다
+
+    ```java
+    List<Callable<Integer>> taskList = ...
+    Integer result = executorService.invokeAny( taskList );
+    ```
 
 디버그용 메서드
 
@@ -198,11 +310,54 @@ class Daemon implements Runnable{
 
 - newCachedThreadPool()
 
-    가변 사이즈로 쓰레드을 생성한다 
+    가변 사이즈로 쓰레드풀을 생성한다 
+
+    60초 간 작업이 없는 경우, 풀에서 제거한다
 
 - newSingleThreadExecutor()
 
     동시에 처리하지 않고 하나씩 처리한다
+
+    TaskPool 이 필요한 경우 사용된다
+
+    - TaskPool: 태스크 자료구조
+
+참고
+
+[https://www.geeksforgeeks.org/difference-between-executorservice-execute-and-submit-method-in-java/](https://www.geeksforgeeks.org/difference-between-executorservice-execute-and-submit-method-in-java/)
+
+# Future
+
+Executable의 반환값을 받을 수 있는 객체로 blocking과 time-wait 을 모두 사용하는 get() 메소드를 지원한다
+
+- get()
+
+    blocking 메소드로, 실행을 기다리고 결과를 반환한다
+
+    ```java
+    Future<Integer> result = executorService.submit( ... );
+    int resultValue = result.get(); // 실행 완료까지 block된다
+    ```
+
+- get(long timeout, TimeUnit unit)
+
+    대기시간 만큼 기다렸다가 타임아웃을 일으킨다
+
+    TimeoutException 을 위해 try-catch 를 준비할 것
+
+- cance(boolean mayInterruptIfRunning)
+
+    mayInterruptIfRunning에 따라 실행중인 작업인 경우 취소할지(true) 정한다
+
+    시작 안된 경우 당연히 취소되고, 이미 끝난경우 취소할 수 없다
+
+- isCanclled()
+
+    취소가 성공했는지 확인한다
+
+- isDone()
+
+    이미 작업이 완료되었는지 확인한다
 
 # 동기화 제어
 
