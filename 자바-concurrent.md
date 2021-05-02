@@ -606,3 +606,195 @@ CAS 알고리즘을 사용하는 락프리 알고리즘이 수행될 때, 메모
 
 - getHoldCount
 - isHeldByCurrentThread
+
+### Blocking Queue
+
+block 기반의 thread-safe 단방향 메시지 큐 인터페이스
+
+- null 삽입 불가 (`NullPointerException`던짐)
+
+    null 필요 시 표준 규약을 만들고, 예외처리해야 함
+
+- capacity bound
+    - 가득 차면(remainingCapacity() 를 통해 확인) 더 이상 put되지 않고 block 된다
+    - queue가 비면 더 이상 take하지 못하고 block 된다
+- 원자성을 보장하지만, bulk-operations 는 예외
+
+    addAll, containsAll, retainAll 등
+
+- close, shutdown없음
+
+    미리 표준 규약을 만들고 데이터 전송 종료를 consumer가 판단하도록 해야 함
+
+- 4가지 전략 지원
+    1. throw exception: 실패 시 즉시 exception 발생
+    2. special value: 실패 시 null 혹은 결과에 따라 false /true 리턴
+    3. block: 가능할때까지 대기
+    4. timeout: 주어진 시간동안만 block
+- 다양한 구현 제공
+    - ArrayBlockingQueue
+
+        고정 배열을 사용한 큐, 크기 변경 불가
+
+        - ArrayBlockingQueue(int capacity)
+
+        공정성 보장 가능 (이 경우 fifo 순서로만 작동)
+
+        - ArrayBlockingQueue(int capacity, boolean fair)
+    - LinkedBlockingQueue
+
+        capacity 내에서 node가 동적으로 생성되는 큐
+
+        head와 tail로 lock이 분리되어 동시에 삽입/삭제가 가능하므로 좀더 높은 throghput을 지원
+
+        capacity를 지정하지 않는 경우 Integer.MAX_VALUE 가 기본값
+
+    - PriorityBlockingQueue
+
+        용량제한 없는 큐
+
+        - SynchronousQueue()
+        - SynchronousQueue(boolean fair)
+
+            마찬가지로 fair=true일때, fifo 순서로만 작동
+
+    - DelayQueue
+
+        delay 시간이 지난 요소만 poll이 가능한 큐
+
+        PriorityBlockingQueue를 상속받아 구현
+
+        - 마찬가지로 용량제한이 없다
+        - 큐 내부 순서는 delay가 지난 것 중 오래된 순서
+        - ⭐큐가 비었을 경우 null을 리턴한다
+
+        Delayed 인터페이스를 상속받은 객체만 삽입할 수 있다
+
+        ```java
+        public interface Delayed extends Comparable<Delayed> {
+            long getDelay(TimeUnit unit);
+        }
+        ```
+
+        getDelay를 구현하는 방법
+
+        ```java
+        public class DelayTask implements Delayed {
+          private final long delayTime;
+        	private long executionTime;
+        	
+        	// delayTime 만큼 미룸
+        	public DelayTask(){
+        		this.executionTime = System.currentTimeMillis() + delayTime;
+        	}
+
+        	// executionTime 과의 차이를 반환
+          public long getDelay(TimeUnit timeUnit) {
+            return timeUnit.convert(
+        			executionTime - System.currentTimeMillis(), 
+        			TimeUnit.MILLISECONDS
+        		);
+          }
+        }
+        ```
+
+    - SynchronousQueue
+
+        put과 take가 항상 동시에 일어나는 큐
+
+    참고: [https://stackoverflow.com/questions/35967792/when-to-prefer-linkedblockingqueue-over-arrayblockingqueue](https://stackoverflow.com/questions/35967792/when-to-prefer-linkedblockingqueue-over-arrayblockingqueue)
+
+전략
+
+Throw Exception 전략
+
+- add(E o) / remove(Object o)
+
+    즉시 삽입, 삭제가 불가능한 경우  예외(`IllegalStateException`)를 던진다
+
+- addAll(Collection<? extends E> c) / removeAll()
+
+    즉시 삽입, 삭제가 불가능한 경우  예외(`IllegalStateException`)를 던진다
+
+- element()
+
+    첫번째 요소를 즉시 출력만 한다
+
+    만약 없는 경우 예외(`IllegalStateException`)를 던진다
+
+Special Value 전략
+
+- offer(E o), poll()
+
+    즉시 삽입, 삭제가 불가능한 경우 `false`를, 성공 시 `true`를 반환한다
+
+- peek()
+
+    첫번째 요소를 즉시 출력만 한다
+
+    만약 없는 경우 `null`을 반환한다
+
+Blocks전략
+
+- put(E o), take()
+
+    즉시 삽입, 삭제가 가능한 경우 삽입, 출력한다
+
+    실패 시 block
+
+    ```java
+    // Main 클래스
+        @AllArgsConstructor
+        private static class Producer implements Runnable {
+            private final BlockingQueue<Integer> queue;
+
+            @Override
+            public void run() {
+                try {
+                    for (int i = 0; i < 5; i++) queue.put(i);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+        @AllArgsConstructor
+        private static class Consumer implements Runnable {
+            private final BlockingQueue<Integer> queue;
+
+            @Override
+            public void run() {
+                try {
+                    int i=0;
+                    while(i != 4){
+                        i = queue.take();
+                        System.out.println(i);
+                    }
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+    ```
+
+Timeout 전략
+
+- offer(E o, long timeout, TimeUnit unit), poll(long timeout, TimeUnit unit)
+
+    가능한 경우 제공하고, 꺼낸다
+
+    시간내 삽입, 삭제가 출력이 불가능한 경우 즉시 예외(`IllegalStateException`)를 발생시킨다
+
+벌크 메소드
+
+- add(E o), remove(E o), element(
+
+위의 예시 실행 
+
+```java
+// Main 의 main 메서드
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        BlockingQueue<Integer> bq = new LinkedBlockingDeque();
+        executorService.submit(new Producer(bq));
+        executorService.submit(new Consumer(bq));
+        executorService.shutdown();
+    }
+```
