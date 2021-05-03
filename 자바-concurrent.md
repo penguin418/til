@@ -695,6 +695,13 @@ block 기반의 thread-safe 단방향 메시지 큐 인터페이스
         			TimeUnit.MILLISECONDS
         		);
           }
+
+          
+          @Override
+          public int compareTo(Delayed o) {
+            long diff = getDelay(TimeUnit.MILLISECONDS) - o.getDelay(TimeUnit.MILLISECONDS);
+            return (int)diff;
+          }
         }
         ```
 
