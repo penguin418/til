@@ -14,7 +14,7 @@ public class Generator implements Runnable {
 
     public Generator(Queue<Document> queue, String firstURL) {
         this.queue = queue;
-        urls.add(firstURL);
+        this.urls.add(firstURL);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Generator implements Runnable {
                 String url = this.urls.pop();
                 System.out.println(url);
                 Document document = Jsoup.connect(url).get();
-                queue.offer(document);
+                this.queue.offer(document);
                 List<String> urls = getLinks(document);
                 this.urls.addAll(urls);
             } catch (IllegalStateException e1) {

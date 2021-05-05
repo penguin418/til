@@ -13,7 +13,7 @@ public class Consumer implements Runnable {
     public void run() {
         while(true){
             try {
-                Document doc = queue.poll();
+                Document doc = this.queue.poll();
                 if (doc != null) {
                     System.out.println(doc.title());
                 }
