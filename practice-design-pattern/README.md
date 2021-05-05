@@ -370,9 +370,14 @@ command 패턴은 기능을 객체화하였기 때문에 자료구조를 통해 
 
 ## Producer-Consumer 패턴
 
-producer-consumer 패턴을 사용한 브라우징
+생산 소비 패턴
+
+- 동시에 여러 프로세스를 빠르게 처리할 수 있다
+-
 
 ### One Producer Many Consumer 패턴
+
+어떤 사이트에서 시작해서 모든 링크를 누르고,  스택에 담아서, 탐색하며, 아무 링크도 없는 페이지에 도달하면 멈춘다. consumer들은 여기서 타이틀을 출력한다
 
 - 하나의 생산자와 다수의 소비자는 빠른 생산과 느린 소비가 이뤄지는 경우이다
 - 쓰기보다 읽기가 주로되는 큐가 이득이다
@@ -389,6 +394,32 @@ producer-consumer 패턴을 사용한 브라우징
             ExecutorService es1 = Executors.newFixedThreadPool(1);
             generatorList.forEach(es1::submit);
             ExecutorService es2 = Executors.newFixedThreadPool(3);
+            consumerList.forEach(es2::submit);
+        }
+    ```
+
+### Many Producer One Consumer 패턴
+
+위 예제와 동일하지만, 생산자 수와 소비자 수가 다르다
+
+- 하나의 소비자와 다수의 생산자는 생산이 느리게 이뤄지는 구조에서 사용된다
+- 쓰기 시, thread-safe함이 매우 중요하다.
+- mutax가 있는 blockingQueue를 사용하는 것이 바람직하다
+
+  이때, url또한 나눠서 쓰므로, url을 위한 queue도 준비한다
+
+    ```java
+    public static void main(String[] args) {
+            Queue<Document> bq = new LinkedBlockingDeque<>();
+            Queue<String> urls = new LinkedBlockingDeque<>();
+            urls.add("https://google.com");
+            List<Generator> generatorList = Stream.of(new Generator(bq, urls),new Generator(bq, urls),new Generator(bq, urls),new Generator(bq, urls))
+                    .collect(Collectors.toList());
+            List<Consumer> consumerList = Stream.of(new Consumer(bq))
+                    .collect(Collectors.toList());
+            ExecutorService es1 = Executors.newFixedThreadPool(4);
+            generatorList.forEach(es1::submit);
+            ExecutorService es2 = Executors.newFixedThreadPool(1);
             consumerList.forEach(es2::submit);
         }
     ```
