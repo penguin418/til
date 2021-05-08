@@ -1,3 +1,4 @@
 rootProject.name = 'practice-redis'
 include 'basic-redis-using-jedis'
 include 'stream-redis-using-lettuce'
+include 'plain-redis-using-lettuce'
