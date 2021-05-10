@@ -9,6 +9,7 @@ include 'ManyProducerOneConsumer'
 include 'OneProducerManyConsumer'
 include 'Prototype'
 include 'Singleton'
+include 'Strategy'
 include 'TemplateMethod'
 include 'ThreadSafeSingleton'
 

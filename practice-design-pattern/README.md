@@ -423,3 +423,27 @@ command 패턴은 기능을 객체화하였기 때문에 자료구조를 통해 
             consumerList.forEach(es2::submit);
         }
     ```
+
+### strategy pattern
+
+전략 패턴은 새로운 전략의 추가를 컨텍스트 코드 변경없이 가능
+
+policy나 strategy용어 사용됨
+
+장점:
+
+- 요구사항 변경 시 기존 코드 유지
+- 사용자가 몰라도 되는 데이터를 사용 시 , 해당 데이털르 ㄹ
+
+단점: 요구사항이
+
+```
+public static void main(String[] args) {
+    Sam sam = new Sam();
+    sam.setHelloPolicy(new HelloHelloPolicy());
+    sam.hello();
+
+    sam.setHelloPolicy(new HiPolicy());
+    sam.hello();
+}
+```
