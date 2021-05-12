@@ -36,7 +36,7 @@
   - `구조 락`은 객체 인스턴스 대상으로 유효하며 블럭을 벗어나면 자동으로 해제됩니다
   - `메소드 락`은 메소드 대상으로 유효합니다
 
-### synchronized02 - wait, notify 를 사용
+### synchronized02
 
 wait과 notify를 사용한 간단한 파이프라인입니다
 
@@ -134,4 +134,133 @@ tryLock 처럼 고급 기능이 필요한 경우 `Reenterant Lock`을 사용합�
         private static final Logger logger = LoggerFactory.getLogger(ReentrantLockTest.class);
         private static final ReentrantLock lock = new ReentrantLock();
         private static int cnt = 0;
+    ```
+  
+### Linked Blocking Queue
+
+쓰레드간 데이터 전달을 위해 블로킹 큐를 사용하면 편합니다
+
+* 메시지 전달을 위해 사용하는 예시입니다
+  ```java
+  // Main.java
+  public class Main {
+      @AllArgsConstructor
+      private static class Producer implements Runnable {
+          private final BlockingQueue<Integer> queue;
+  
+          @Override
+          public void run() {
+              try {
+                  String[] messages = {"안녕하세요"};
+                  for (int i = 0; i < 5; i++) queue.put(i);
+              } catch (InterruptedException ignored) {
+              }
+          }
+      }
+      @AllArgsConstructor
+      private static class Consumer implements Runnable {
+          private final BlockingQueue<Integer> queue;
+  
+          @Override
+          public void run() {
+              try {
+                  int i=0;
+                  while(i != 4){
+                      i = queue.take();
+                      System.out.println(i);
+                  }
+              } catch (InterruptedException ignored) {
+              }
+          }
+      }
+  
+  
+      public static void main(String[] args) throws ExecutionException, InterruptedException {
+          ExecutorService executorService = Executors.newFixedThreadPool(2);
+          BlockingQueue<Integer> bq = new LinkedBlockingDeque();
+          executorService.submit(new Producer(bq));
+          executorService.submit(new Consumer(bq));
+          executorService.shutdown();
+      }
+  }
+  ```
+
+### Delay Queue
+
+딜레이 큐를 사용하면 스케줄러를 간단하게 만들 수 있습니다
+
+* DelayQueue에는 Delayd의 구현 클래스만 들어가기 때문에 DelayEvent를 구현했습니다
+  
+  생성자에서 딜레이시간을 입력받지만, 고정값을 사용하는 구현도 가능합니다
+  ```java
+  // main.java 의 DelayEvent 클래스
+    public static class DelayEvent implements Delayed {
+      private final long executionTime;
+      private String message = "";
+      
+      // delayTime 만큼 미룸
+      public DelayEvent(String message, long delayTime, TimeUnit timeUnit){
+        this.message = message;
+        this.executionTime = System.currentTimeMillis() + TimeUnit.MILLISECONDS.convert(delayTime, timeUnit);
+      }
+
+      public String getMessage(){
+        return this.message;
+      }
+
+      // executionTime 과의 차이를 반환
+      public long getDelay(TimeUnit timeUnit) {
+        return timeUnit.convert(
+            executionTime - System.currentTimeMillis(), 
+            TimeUnit.MILLISECONDS
+        );
+      }
+
+      @Override
+      public int compareTo(Delayed o) {
+        return (int)(getDelay(TimeUnit.MILLISECONDS) - o.getDelay(TimeUnit.MILLISECONDS));
+      }
+    }
+  ```
+  이 구현은 매번 시간을 체크하는 루프가 돌아가서 비효율적입니다
+  
+* Consumer 클래스는 사실 데몬처럼 계속 대기하도록 구현했습니다
+  
+  어떤 구현에서는 입력받을 개수를 미리 정하고 생성하는 경우도 있지만, 대부분 쓰레드 풀 속에 남아있을 것이므로 생각할 필요가 없습니다
+  ```java
+      @AllArgsConstructor
+      private static class Consumer implements Runnable {
+          private final DelayQueue<DelayEvent> queue;
+  
+          @Override
+          public void run() {
+              try {
+                  while(true){
+                      DelayEvent event = queue.take();
+                      System.out.println(event.getMessage());
+                  }
+              } catch (InterruptedException ignored) {
+              }
+          }
+      }
+  ```
+* 실제 구현을 위해서는 캘린더 큐를 사용하는 것이 낫습니다
+    ```java
+      // main.java
+      public static void main(String[] args) throws ExecutionException, InterruptedException {
+          ExecutorService executorService = Executors.newFixedThreadPool(2);
+          DelayQueue<DelayEvent> bq = new DelayQueue<>();
+          executorService.submit(new Consumer(bq));
+          bq.put(new DelayEvent("고구마 심기", 1, TimeUnit.SECONDS));
+          bq.put(new DelayEvent("친구랑 만나기", 1, TimeUnit.HOURS));
+          bq.put(new DelayEvent("양파 2개, 토마토소스 1개 구매", 2, TimeUnit.SECONDS));
+  
+          executorService.shutdown();
+          if (!executorService.awaitTermination(1, TimeUnit.SECONDS)){
+              List<DelayEvent> finished = new ArrayList<>();
+              bq.drainTo(finished);
+              System.out.println("먼 미래의 스케줄 " + bq.size());
+              executorService.shutdownNow();
+          }
+      }
     ```
