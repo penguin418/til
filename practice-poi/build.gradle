@@ -1,0 +1,19 @@
+allprojects{
+    group 'org.example'
+    version '1.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    compileJava.options.encoding = "UTF-8"
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.apache.poi:poi:5.0.0'
+        implementation 'org.apache.poi:poi-ooxml:5.0.0'
+    }
+}

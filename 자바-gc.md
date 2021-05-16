@@ -1,61 +1,6 @@
 # 가비지 콜렉터
 
-1. jvm
-
-    컴파일 과정
-
-    - JAVAC 컴파일(.java->.class)
-    - 클래스 로더로 JVM으로 로딩(.class->메모리)
-
-    jvm의 구조
-
-    - 클래스 로더
-    - 메모리(메소드,힙,스택,pc,네이티브메소드스택)
-    - 엔진(인터프리터, JIT, GC), JNI(Java NativeMethod Interface), Native Method Library
-
-    클래스 로더
-
-    - 로딩: 클래스을 읽어옴
-
-        - 로딩요청위임(delegation): 유저 정의 -> 시스템 -> 확장(extension) -> 부트스트랩(bootstrap)
-            - 유저 정의: 유저가 만든 파일
-            - 시스템: class_path
-            - 확장: $JAVA_HOME
-            - 부트스트랩: 네이티브 코드로 JVM이 실행될 때 가장 먼저 실행되는 코드이다
-        - 가시성 제약: 부모 로더를 통해서 찾을 수 있지만, 자식 로더로는 찾을 수 없음
-        - 언로드 불가능: 한번 로드되면 JVM에서 안없어짐(로드한 클래스 없어질때 까지)
-
-        출처: https://futurists.tistory.com/43?category=550970
-    - 링크
-
-        - 바이트 코드 검사(자바 규칙으로), 데이터 구조 분석, 다른 클래스 로딩
-    - 초기화
-
-      - 정적 필드 초기화
-
-    메모리
-
-      - 메소드
-
-          - 공유자원
-          - 메소드, 변수 정보
-      - 힙
-
-          - 객체
-          - 로딩된 .class타입의 객체
-      - 스택
-
-          - 스레드마다 runtime stack 존재
-
-      - pc(pc)
-        
-          - 스레드 pc임
-
-      - 네이티브메소드스택
-    엔진
-      - 인터프리터: 바이트 코드를 하나씩 네이티브 코드로 변경
-      - jit컴파일러: 반복되는 코드 발견 시를 네이티브 코드로 변경
-      - gc: 참조되지 않은 객체 제거
+1. jvm 복습
 
     운영체제와 독립적으로 jvm위에서 java가 실행
 
@@ -137,16 +82,16 @@
     Full GC: Permanent까지 삭제
 
 - 메이저 GC 종류
+    - Serial GC: Mark Sweep 알고리즘(루트Set에서 부터 살아있는 객체 mark(as Reachable), 나머지 삭제, 이후 힙영역에 정렬), 오래걸릴 수 있음, 메모리가 단편화됨
+    - Parallel GC: 멀티쓰레드로 Mark Sweep 수행, 멀티코어에서 유리
+    - Parallel Old GC: Old영역의 GC 알고리즘이 다름
+    - CMS GC: 이해가 안됨 ㅋㅋㅋ
 
-    Serial GC: Mark Sweep 알고리즘(루트Set에서 부터 살아있는 객체 mark(as Reachable), 나머지 삭제, 이후 힙영역에 정렬), 오래걸릴 수 있음, 메모리가 단편화됨 
+        새로 나온 GI에 비해 안정성이 높아서 은근 많이 쓰인다고 한다
 
-    Parallel GC: 멀티쓰레드로 Mark Sweep 수행, 멀티코어에서 유리
+    - GI GC: Young Old 없이 객체를 빠르게 할당 / GC한다
 
-    Parallel Old GC: Old영역의 GC 알고리즘이 다름
-
-    CMS GC: 이해가 안됨 ㅋㅋㅋ
-
-    GI GC: Young Old 없이 객체를 빠르게 할당 / GC한다
+        가장 최근 나온 GC 옵션, 현업에서도 많이 쓰인다고 한다
 
 - GC 수행과정
 
@@ -170,4 +115,29 @@
 
 1. Metaspace & Heap
     - 자바8부터 적용됨
-    -
+    - 
+
+### GC 관리
+
+jmx로 wsl연결하기 (jmx 사용 시)
+
+1. wsl ip 확인
+
+    ```java
+    wsl hostname -I
+    <아이피>
+    ```
+
+2. wsl에서 jmx로 실행
+
+    ```java
+    java -Dcom.sun.management.jmxremote.port=8989 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -cp libs/jcommander-1.81.jar:build/libs/hello-1.0-SNAPSHOT.jar Helloworld -p hello
+    ```
+
+3. jvisualvm 에서 remote-jmx로 연결
+
+    위에서 얻은 hostname과 지정한 port 입력
+
+    Do not require SSL connection 에 체크
+
+4. profit !
