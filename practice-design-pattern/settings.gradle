@@ -12,4 +12,5 @@ include 'Singleton'
 include 'Strategy'
 include 'TemplateMethod'
 include 'ThreadSafeSingleton'
+include 'Proxy'
 

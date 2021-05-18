@@ -1,3 +1,20 @@
+```
+public class SomeHeavyWork implementsHeavyWork{
+    private String value = "none";
+
+    public SomeHeavyWork(String value){
+        System.out.println("do heavy pre-process");
+        this.value = value.repeat(2);
+    }
+
+    @Override
+    public String getValue() throws InterruptedException {
+        return this.value;
+    }
+}
+
+```
+
 # 디자인패턴 연습
 
 콘텍스트, 문제, 해결 방법을 다룹니다
@@ -447,3 +464,89 @@ public static void main(String[] args) {
     sam.hello();
 }
 ```
+
+# proxy 패턴
+
+virtual proxy (light book, heavy book 전략)
+
+- 비싼 메서드 실행을 최대로 미루는 virtual proxy패턴을 사용해서 초기화 시간을 줄일 수 있다
+
+  메모리도 아낄 수 있다
+
+    ```java
+    public static void main(String[] args) throws InterruptedException {
+      Queue<HeavyWork> heavyWorks = new ArrayDeque<>()
+      {{
+          add(new SomeHeavyWork("1"));
+          add(new SomeHeavyWork("2"));
+          add(new SomeHeavyWorkVirtualProxy("3"));
+          add(new SomeHeavyWorkVirtualProxy("4"));
+      }};
+      
+      System.out.println(heavyWorks.remove().getValue());
+      System.out.println(heavyWorks.remove().getValue());
+      System.out.println(heavyWorks.remove().getValue());
+      System.out.println(heavyWorks.remove().getValue());
+    }
+    ```
+
+    ```java
+    출력 결과
+    do heavy pre-process
+    do heavy pre-process
+    11
+    22
+    do heavy pre-process
+    33
+    do heavy pre-process
+    44
+    ```
+
+    ```java
+    public interface HeavyWork {
+        public String getValue() throws InterruptedException;
+    }
+    ```
+
+- SomeHeavyWork는 초기화 후, 차지하는 메모리의 크기는 2배가 되는 비싼 객체이다
+
+    ```java
+    public class SomeHeavyWork implements HeavyWork{
+        private String value = "none";
+
+        public SomeHeavyWork(String value){
+            System.out.println("do heavy pre-process");
+            this.value = value.repeat(2);
+        }
+
+        @Override
+        public String getValue() throws InterruptedException {
+            return this.value;
+        }
+    }
+    ```
+
+- proxy객체는 대상 객체를 감싸고 있으며, 비싼 비용이 드는 생성을 최대한 뒤로 미루었다가 최초로 참조시 그것을 사용한다
+
+    ```java
+    public class SomeHeavyWorkVirtualProxy implements HeavyWork{
+        private String value;
+        private SomeHeavyWork someHeavyWork = null;
+        public SomeHeavyWorkVirtualProxy(String value){
+            this.value = value;
+        }
+
+        @Override
+        public String getValue() throws InterruptedException {
+            if (someHeavyWork == null)
+                someHeavyWork = new SomeHeavyWork(this.value);
+            return someHeavyWork.getValue();
+        }
+    }
+    ```
+
+### Remote Proxy
+
+### Protection Proxy
+
+### Smart Reference
