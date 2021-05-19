@@ -547,6 +547,7 @@ virtual proxy (light book, heavy book 전략)
 
 ### Remote Proxy
 
+  rmi 는 일종의 리모트 프록시로, 원격 환경에 있으나 로컬 객체처럼 다룰 수 있다
 ### Protection Proxy
 
 ### Smart Reference
