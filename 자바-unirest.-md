@@ -1,0 +1,80 @@
+## Unirest-Java
+
+rest api 호출을 지원하는 가벼운 라이브러리
+
+### 시작하기
+
+- gradle 의존성 추가
+
+    ```java
+    implementation 'com.konghq:unirest-java:3.11.09:standalone'
+    ```
+
+- 응답 결과를 객체로 받는 경우 mappers의존성 추가
+
+    ```java
+    implementation 'com.konghq:unirest-object-mappers-gson:3.11.09'
+    ```
+### 메소드
+
+get, post, put, delete, patch, head, option을 모두 지원한다
+
+- get() : GetRequest
+
+    get은 자원을 조회하는 데 사용된다
+
+    ```java
+    final HttpResponse<String> response = Unirest.get(BASE_URL).asString();
+    System.out.println(response);
+    ```
+
+- head() : GetRequest
+
+    헤더만 요청할 때 사용된다
+
+- options() : GetRequest
+
+    서버의 옵션을 확인하는데 사용된다
+
+- post() : HttpRequestWithBody
+
+    post는 자원을 등록하는 데 사용된다
+
+    ```java
+    HttpResponse<JsonNode> response = Unirest.post("http://localhost:8080/api")
+          .header("accept", "application/json")
+          .queryString("apiKey", "123")
+          .field("parameter", "value")
+          .field("firstname", "Gary")
+          .asJson();
+    ```
+
+    - 비동기
+- put() : HttpRequestWithBody
+
+    put은 자원을 수정하는 데 사용된다
+
+- put() : HttpRequestWithBody
+
+    patch도 자원을 수정하는 데 사용된다
+
+- delete() : HttpRequestWithBody
+
+    delete는 자원을 삭제하는 데 사용된다
+
+    ```java
+    Unirest.delete("http://httpbin.org/delete").asEmpty()
+    ```
+### Config
+
+현재 unirestInstance의 설정을 변경한다
+
+- defaultBaseUrl(String value)
+
+    기본 url을 설정한다
+
+    ```java
+    Unirest.config().defaultBaseUrl("http://homestar.com");
+        
+       Unirest.get("/runner").asString();
+    ```
