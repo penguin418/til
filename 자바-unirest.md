@@ -320,3 +320,9 @@ Unirest는 자동으로 꺼지지 않는다
         System.out.println(response.getBody());
     }catch (Exception e){}
     ```
+
+참고:
+
+http://kong.github.io/unirest-java/#responses
+
+https://www.slideshare.net/rahulpatel184/unirest-java-tutorial-java-http-client
