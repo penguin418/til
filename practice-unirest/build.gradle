@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation 'com.konghq:unirest-java:3.11.09:standalone'
+    implementation 'com.konghq:unirest-object-mappers-gson:3.11.09'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }

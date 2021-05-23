@@ -35,6 +35,14 @@ Unirest는 내부적으로 UnirestInstance 클래스 타입의 단일 객체를 
     	private final Config config;
     ```
 
+    - config()
+
+        수정할 수 있는 config객체를 반환한다
+
+        해당 옵션은 실행 후 변경할 수 없다
+
+        shutdown을 통해 완전히 종료 후, 설정을 변경할 수 있다
+
 - 실제 Method는 BaseRequest에 구현되있다
 
     ```java
@@ -252,8 +260,6 @@ GetRequest는 부모클래스인 HttpRequest은 물론 확장된 옵션들을 �
                     .getBody();
     ```
 
-결과가 큰 경우
-
 ### Async
 
 - 1초만에 응답하는 delay를 사용해 시험해본다
@@ -301,6 +307,40 @@ GetRequest는 부모클래스인 HttpRequest은 물론 확장된 옵션들을 �
         
        Unirest.get("/runner").asString();
     ```
+
+- setDefaultHeader(String name, String value)
+
+    기본 헤더를 설정한다
+
+- addDefaultHeader(String name, String value)
+
+    기본 헤더를 추가한다
+
+- addDefaultCookie(String name, String value)
+
+    기본 쿠키를 추가한다
+
+- interceptor(Interceptor value)
+
+    인터셉터를 추가한다
+
+- concurrency(int total, int perRoute)
+
+    connection pool을 지원한다
+
+### 인터셉터
+
+인터셉터 인터페이스를 사용해서 인터페이스를 구성할 수 있다
+
+- onRequest(HttpRequest<?> request, Config config) : void
+
+    요청 전에 호출된다
+
+    request를 보거나, 수정할 때 사용된다
+
+- onResponse(HttpResponse<?> response, HttpRequestSummary request, Config config) : void
+
+    응답 후 호출된다
 
 ### 종료
 

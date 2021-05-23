@@ -60,4 +60,25 @@ public class TestRest {
                         .asJson();
         Assertions.assertEquals("application/json", response.getHeaders().get("content-type").get(0));
     }
+
+    public static class RBody{
+        public String data;
+        public Map<String, String> headers;
+
+        @Override
+        public String toString() {
+            return "RBody{" +
+                    "data='" + data + '\'' +
+                    ", headers=" + headers +
+                    '}';
+        }
+    }
+
+    @Test
+    public void testAsObject(){
+        final RBody rBody = Unirest.get(BASE_URL + "/anything/anything")
+                .asObject(RBody.class)
+                .getBody();
+        System.out.println(rBody);
+    }
 }
