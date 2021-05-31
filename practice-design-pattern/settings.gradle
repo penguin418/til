@@ -1,4 +1,5 @@
 rootProject.name = 'DesignPattern'
+include 'Adapter'
 include 'AbstractFactory'
 include 'Builder'
 include 'Command2'
