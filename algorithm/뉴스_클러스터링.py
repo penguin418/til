@@ -1,6 +1,7 @@
 # 출처: 프로그래머스 코딩 테스트 연습, https://programmers.co.kr/learn/challenges
 from collections import defaultdict
 
+# 다중집합을 사용하여 자카드 유사도 계산
 def make_mulset(str):
     str = str.lower()
     if len(str)==2:
