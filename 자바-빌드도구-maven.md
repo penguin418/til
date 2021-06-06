@@ -1,4 +1,4 @@
-# 자바-버전관리 (gradle, maven)
+# 자바-빌드도구 (gradle, maven)
 
 # Maven
 
