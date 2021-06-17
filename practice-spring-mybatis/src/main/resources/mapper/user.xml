@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "mybatis-3-mapper.dtd">
+
+<mapper namespace="USERS">
+    <!--매핑-->
+    <resultMap id="userMapper" type="example.boilerplate.springmybatis.entity.User">
+        <id column="id" javaType="int" property="id"/>
+        <id column="username" javaType="String" property="username"/>
+        <id column="password" javaType="String" property="password"/>
+    </resultMap>
+
+    <!--직접 아이디로 추가하는 쿼리문, 이미 존재하는 아이디로 추가하지 않으면 괜찮은 것 같음-->
+    <insert id="insertUserWithId" parameterType="java.util.HashMap">
+        INSERT INTO users (id, username, password)
+        VALUES( #{id}, #{username}, #{password} )
+    </insert>
+    <!--아이디를 만들어서 추가하는 쿼리문, 아이디를 아예 안넣어도 괜찮은듯-->
+    <insert id="insertUserWithoutId" parameterType="java.util.HashMap"
+            useGeneratedKeys="true" keyColumn="id">
+        INSERT INTO users (username, password)
+        VALUES(#{username}, #{password} )
+    </insert>
+
+    <!--아이디를 반환하는 쿼리문, keyProperty에 객체의 아이디를 넣어주면 됨-->
+    <insert id="insertUserReturningId" parameterType="example.boilerplate.springmybatis.entity.User"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO users (username, password)
+        VALUES(#{username}, #{password} )
+    </insert>
+
+    <!--아이디로 유저를 조회하는 쿼리문    -->
+    <select id="selectUser" parameterType="java.util.HashMap" resultMap="userMapper">
+        SELECT id, username, password FROM users WHERE id = #{id}
+    </select>
+    <!--모든 유저를 조회하는 쿼리문-->
+    <select id="selectUsers" resultMap="userMapper">
+        SELECT * FROM users
+    </select>
+
+    <!--업데이트하는 쿼리문-->
+    <update id="updateUser" parameterType="example.boilerplate.springmybatis.entity.User">
+        UPDATE users
+        SET username = #{username}, password = #{password}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM users
+        WHERE id = #{id}
+    </delete>
+</mapper>
