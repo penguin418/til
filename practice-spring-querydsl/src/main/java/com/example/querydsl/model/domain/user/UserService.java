@@ -1,4 +1,4 @@
-package com.example.querydsl.domain.user;
+package com.example.querydsl.model.domain.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,5 @@
-package com.example.querydsl.domain.user;
+package com.example.querydsl.model.domain.user;
 
-
-import com.querydsl.core.BooleanBuilder;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 

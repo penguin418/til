@@ -1,5 +1,7 @@
-package com.example.querydsl.domain.user;
+package com.example.querydsl.model.domain.user;
 
+import com.example.querydsl.model.domain.user.User;
+import com.example.querydsl.model.domain.user.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -10,13 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserServiceTest {
 
-    @Autowired UserService userService;
+    @Autowired
+    UserService userService;
 
     @Test
     @Transactional

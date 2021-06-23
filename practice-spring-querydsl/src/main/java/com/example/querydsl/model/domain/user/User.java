@@ -1,4 +1,4 @@
-package com.example.querydsl.domain.user;
+package com.example.querydsl.model.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +22,8 @@ public class User {
     private String password;
 
     private Integer power;
+
+    public User(Long userId) {
+        this.userId = userId;
+    }
 }

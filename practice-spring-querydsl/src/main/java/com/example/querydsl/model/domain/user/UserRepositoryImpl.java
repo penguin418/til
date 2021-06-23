@@ -1,4 +1,4 @@
-package com.example.querydsl.domain.user;
+package com.example.querydsl.model.domain.user;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import static com.example.querydsl.domain.user.QUser.user;
+import static com.example.querydsl.model.domain.user.QUser.user;
 
 @AllArgsConstructor
 public class UserRepositoryImpl implements UserRepositoryCustom {
@@ -27,6 +27,5 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .selectFrom(user)
                 .where(builder)
                 .fetch();
-
     }
 }
