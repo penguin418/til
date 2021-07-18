@@ -1,0 +1,15 @@
+package penguin.taskexecutor;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+@EnableAsync
+@SpringBootApplication
+public class TaskexecutorApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(TaskexecutorApplication.class, args);
+	}
+
+}
