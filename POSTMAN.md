@@ -174,3 +174,53 @@ pre-requests Script는 Collection과 각 request 모두에 설정할 수 있다.
 
 - 두 곳 모두에 스크립트가 있는 경우, Collection에 있는 스크립트가 먼저 수행되고 각 request에 있는 스크립트가 수행된다.
 - 이때는  Collection의 스크립트에서 Local변수인 variables에 저장해서 넘겨줘도 request에서 받을 수 있다
+
+# 5. Body에서 변수 사용하기
+
+앞에서 변수 사용 방법에 대해 알아봤다. POSTMAN의 변수는 parameter, headers, body에서 사용가능하다. 그러나 body 에서는 사용법이 약간 아쉬운데, 그것은 스트링 내부에선 사용할 수 없다는 것이다.
+
+기본적으로는 아래처럼 사용할 수 있다
+
+```jsx
+{
+	id: {{ID}}
+}
+```
+
+하지만 짧은 스크립트 하나만 작성하면, 아래 상황에서도 사용할 수 있다
+
+```jsx
+{
+	id: "USER_{{ID}}"
+}
+```
+
+아래는 {{}}를 찾아 POSTMAN의 변수로 대체해 주는 스크립트이다
+
+```jsx
+// env, collection변수 덮어쓰기
+variables = {}
+Object.entries(pm.environment.toJSON().values) 
+    .forEach(([k,v])=>{ variables[v.key] = v.value})
+Object.entries(pm.collectionVariables.toJSON().values)
+    .forEach(([k,v])=>{ variables[v.key] = v.value})
+
+// {{}}패턴이 존재하면 치환
+let rawBody = pm.request.body.toString()
+const re = /{{[^}]*}}/
+let match
+while((match = re.exec(rawBody))){
+    const pattern = match[0]
+    const variable = pattern.slice(2,pattern.length-2)
+    const value = variables[variable]
+
+    rawBody = replaceIndex(rawBody, value, match.index, match.index+pattern.length)
+}
+// 치환하는 메서드
+function replaceIndex (original, replace, begin, end){
+    const post = original.substring(end, original.length-1)
+  	const pre = original.substring(0, begin)
+    return pre + replace + post
+}
+pm.request.rawBody = rawBody
+```
