@@ -28,7 +28,7 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
     
     처리를 지시하는 헤더로 다음의 종류가 있다
     
-    - Cache-Control
+    - Cache-Control (HTTP/1.1)
     - Expect (HTTP/1.1)
         
         ```jsx
@@ -44,6 +44,13 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
         주의: 몇몇 클라이언트(예: [curl 에서 put,post요청](https://gms.tf/when-curl-sends-100-continue.html) 등)는 자동으로 보내므로 유의해야 한다. 해당 요청을 받은 서버 (혹은 게이트웨이)가 HTTP/1.1 이전이라면 즉시 `417 (Expectation Failed)`를 반환하므로,  요청이 거부될 수 있다. 해결 방법은 해당 헤더 값을 null로 덮어씌우거나 사용하지 않는 것이다.
         
     - Host
+        
+        ```sql
+        example.com:4333
+        ```
+        
+        이 헤더는 서버의 도메인 네임을 나타낸다. 필수 값이며 포트를 포함한다.
+        
     - Max-Forwards
         
         ```jsx
@@ -56,11 +63,17 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
         
         TTL과 같은 의미이다. HTTP, SMTP 프로토콜을 일부 차용하여 만들어진 SIP 프로토콜에서는 간단한 이슈 원인으로 쓰이는 것 같다.
         
-    - Pragma
+    - Pragma (HTTP/1.0)
         
-        이 헤더는 캐시동작 등을 제거하는 지시어를 전달하는 헤더이다. 
+        ```jsx
+        no-cache
+        ```
+        
+        이 헤더는 캐시동작을 제어하기 위한 헤더이다. HTTP/1.1의`Cache-Control: no-cache`와 동일한 의미로, HTTP/1.0 클라이언트와의 하위호환성을 위해서 사용되지만, 구현이 표준화되어 있지 않으므로 실제 동작은 서버에 따라 다르게 동작할 수 있다.
         
     - Range
+        
+        
     - TE
     
     ### Conditionals
@@ -77,16 +90,69 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
     
     컨텐츠를 협상하는 헤더로 다음의 종류가 있다
     
+    공통적으로 세미콜론(;) 뒤에 q=<품질>을 추가하여 선호하는 품질을 명시할 수 있다.
+    
     - Accept
+        
+        ```sql
+        <주타입>/<보조타입> [; q=품질]
+        ```
+        
+        이때, 품질은 0~1사이로 1인경우 생략된다.
+        
+        이 헤더는 서버에게 요청하는 콘텐츠 타입을 의미한다. 코마(,)를 사용하여 여러 개 사용할 수 있다.
+        
+        - **/**
+            
+            어떤 것이든 상관없다는 의미이다.
+            
+        - text/html
+        - image/png
+        - text/*
+        - application/json
     - Accept-Charset
+        
+        ```sql
+        utf-8; q-0.9
+        ```
+        
+        사용하지 않는 경우 ISO-8859-1
+        
     - Accept-Encoding
+        
+        이 헤더는 클라이언트가 지원하는 콘텐츠 압축방식을 명시한다.
+        
+        - gzip
+        - deflate
     - Accept-Language
+        
+        ```sql
+        ko-KR,ko;q-0.9
+        ```
+        
+        이 헤더는 클라이언트가 지원하는 언어를 명시한다.
+        
     
     ### Authentication Credentials
     
     인증 자격을 전달하는 헤더로 다음의 두 종류가 있다
     
     - Authorization
+        
+        ```sql
+        Basic <토큰>
+        ```
+        
+        또는
+        
+        ```sql
+        Bearer <토큰>
+        ```
+        
+        이 헤더는 인증 토큰을 전달하는 헤더이다.
+        
+        토큰의 종류는 Basic과 Baerer가 있다.
+        
     - Proxy-Authorization
     
     ### Request Context
@@ -96,6 +162,33 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
     - From
     - Referer
     - User-Agent
+        
+        요청을 보낸 클라이언트
+        
+    
+    ### 그 외 유명한 헤더
+    
+    - Date
+        
+        HTTP 메시지가 만들어진 시간(자동생성)
+        
+    - Content-Length
+        
+        본문의 크기 (바이트)
+        
+    - Content-Type
+        
+        이 헤더는 body의 데이터 타입을 나타내는 헤더이다. body가 있는 메서드(POST, PUT, DELETE)에서만 의미가 있다.
+        
+        - text/html : html
+        - www-url-form-encoded : 폼
+        - multipart/form-data
+    - Content-Encoding
+        
+        콘텐츠의 압축 방식
+        
+        - gzip
+        - deflate
 3. Message Body
 
 # 클라이언트의 IP식별
