@@ -1,0 +1,25 @@
+allprojects {
+    group 'com.github.penguin418'
+    version '1.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
+    repositories {
+        mavenCentral()
+    }
+    ext{
+
+    }
+
+    dependencies {
+        // 편의를 위해 추가한 lombok과 logger
+        compileOnly 'org.projectlombok:lombok:1.18.22'
+        annotationProcessor 'org.projectlombok:lombok:1.18.22'
+        implementation 'org.slf4j:slf4j-api:1.7.6'
+    }
+}
