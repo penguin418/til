@@ -216,7 +216,6 @@ Temporary Items
 .vertx
 
 ### Gradle ###
-.gradle
 build/
 
 # Ignore Gradle GUI config
@@ -235,3 +234,6 @@ gradle-app.setting
 **/build/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,vertx,java,gradle,intellij+all,jetbrains+all
+/.gradle/
+.gradle/
+gradle/
