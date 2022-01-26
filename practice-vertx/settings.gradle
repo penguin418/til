@@ -1,4 +1,3 @@
 rootProject.name = 'practice-vertx'
-include '01-deployment'
-include '02-future'
-
+include '01-future'
+include '03-deployment'
