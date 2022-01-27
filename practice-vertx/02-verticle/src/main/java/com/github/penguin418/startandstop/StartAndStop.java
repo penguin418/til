@@ -1,24 +1,33 @@
-package com.github.penguin418;
+package com.github.penguin418.startandstop;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import io.vertx.core.impl.Deployment;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Slf4j
 public class StartAndStop extends AbstractVerticle {
     /**
-     * deploy 되었을 때 호출되는 메서드
+     * 예전에 사용되던 start 메서드로, 새로 추가된 Promise
+     * 우선권이 낮아 새로 추가된 start 메서드와 동시에 선언되면 옛날 start 메서드는 실행되지 않는다.
+     * @throws Exception
+     */
+    @Override
+    public void start() throws Exception {
+        log.info("plain start");
+    }
+
+    /**
+     * deploy 되었을 때 호출되는 메서드이다.
+     * 새로 추가된 start로 promise 를 인자로 받는다
+     * 기본적으로는 내부에서 최대 2초의 block을 허용한다
      * @param startPromise
      * @throws Exception
      */
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
-        log.info("start");
+        log.info("new start");
         startPromise.complete();
     }
 
@@ -57,7 +66,7 @@ public class StartAndStop extends AbstractVerticle {
                     // 배포한 verticle 을 하나만 정지할 수도 있다.
                     // vertx.undeploy(deploymentId);
 
-                    // 현재 vertx 컨텍스트를 정지
+                    // 현재 vertx 컨텍스트를 정지하면 모든 verticle이 종료된다
                     // verticle 내부에서는 getVerticle().close() 로 호출할 수 있다
                     vertx.close();
                     promise.complete();
@@ -68,8 +77,5 @@ public class StartAndStop extends AbstractVerticle {
             });
             return promise.future();
         });
-
-
-
     }
 }
