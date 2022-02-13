@@ -1,11 +1,7 @@
-package retrypattern;
-
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Slf4j

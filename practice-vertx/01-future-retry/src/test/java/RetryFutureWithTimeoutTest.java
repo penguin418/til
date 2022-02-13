@@ -8,10 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrypattern.RetryFuture;
-import retrypattern.RetryFutureWithTimeout;
-
-import java.util.function.Supplier;
 
 
 @ExtendWith(VertxExtension.class)
@@ -29,7 +25,7 @@ class RetryFutureWithTimeoutTest {
                     .retry(() -> {
                         log.info("do task");
                         Promise<String> promise = Promise.promise();
-                        vertx.setTimer(1000, timerId -> promise.fail("intended fail"));
+                        vertx.setTimer(5000, timerId -> promise.fail("intended fail"));
                         return promise.future();
                     }, 5);
 
