@@ -10,16 +10,153 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
     
     Start Line은 Request에서 request-line, Response 에서 status-line을 의미한다. 
     
+    - request에서 메시지 구조
+        1. request-line
+        2. header fields
+        3. 띄어쓰기(CRLF)
+        4. message
+    - response에서 메시지 구조
+        1. status-line
+        2. header fields
+        3. 띄어쓰기(CRLF)
+        4. message
+    
     ### request-line
     
-    ### status-line
+    ### response-line
     
-    나중에 정리함
+    ```sql
+    <HTTP-Version> <Status-Code> <Reason-Phrase>
+    ```
     
+    ```sql
+    HTTP/1.1 200 OK
+    ```
+    
+    - HTTP-Version
+        
+        http 버전을 나타낸다
+        
+        요즘은 주로 1.0, 1.1과 2로 나뉜다
+        
+    - Status-Code
+        
+        3자리 숫자로, 확장가능하다. HTTP 어플리케이션은 모든 코드를 구현할 필요는 없지만 XYZ 형식의 Status-Code는 X00 Status-Code에 준하게 취급해야 한다.
+        
+        예를 들어 서버가 499라는 코드를 반환했을 때 클라이언트는 해당 코드를 몰라도 400번대에 해당하는 요청 오류의 한 종류로 취급하여야 한다.
+        
+    - Reason-Phrase
+        
+        사람을 위한 상태 코드 설명란으로 클라이언트는 해당 항목을 검사할 의무가 없다
+        
+    - Status-Code와 Reason-Phrase 추천 목록
+        
+        해당 추천목록은 5개의 클래스로 나눠져 있다. 클래스 내의 각 항목은 프로토콜에 영향을 주지 않고 수정될 수 있다. 
+        
+        - 1xx: 정보 유형
+            
+            요청이 접수 / 진행중 등
+            
+            100 - Continue
+            
+            101 - Switch Protocols
+            
+        - 2xx: 성공 유형
+            
+            액션이 성공함, 받아들여짐 등
+            
+            200 - OK
+            
+            201 - Created
+            
+            202 - Accepted
+            
+            203 - Non-Authroitative Information
+            
+            204 - No Content
+            
+            205 - Reset Content
+            
+            206 - Partial Content
+            
+        - 3xx: 리다이렉션 유형
+            
+            현재 요청을 처리하기 위해 추가적인 액션이 요구됨
+            
+            300 - Multiple Choices
+            
+            301 - Moved Permanently
+            
+            302 - Found
+            
+            302 - See Other
+            
+            304 - Not Modified
+            
+            305 - Use Proxy
+            
+            307 - Temporary Redirect
+            
+        - 4xx: 클라인언트 에러 유형
+            
+            요청이 아예 잘못되었거나 처리할 수 없는 요청임
+            
+            400 - Bad Request
+            
+            401 - Unauthoirzed
+            
+            402 - Payment Required
+            
+            403 - Forbidden
+            
+            404 - Not Found
+            
+            405 - Method Not Allowed
+            
+            406 - Not Acceptable
+            
+            407 - Proxy Authentication Required
+            
+            408 - Request Time0out
+            
+            409 - Conflict
+            
+            410 - Gone
+            
+            411 - Length Required
+            
+            412 - Precondition Failed
+            
+            413 - Request Entity Too Large
+            
+            414 - Request-URI Too Large
+            
+            415 - Unsupported Media Type
+            
+            416 - Requested range not satisfiable
+            
+            417 - Expectation Failed
+            
+        - 5xx: 서버 에러 유형
+            
+            요청은 유효하나, 서버가 요청을 처리하지 못함
+            
+            500 - Internal Server Error
+            
+            501 - Not Implemented
+            
+            502 - Bad Gateway
+            
+            503 - Service Unavailable
+            
+            504 - Gateway Time-out
+            
+            505 - HTTP Version not supported
+            
 2. Header Fields
     
     ```jsx
-    필드이름 : 필드값
+    <Field-Name> : <Field-Value>
     ```
     
     필드는 확장될 수 있으나, 기본적인 헤더가 존재한다
@@ -189,6 +326,48 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
         
         - gzip
         - deflate
+    
+    ### Response 헤더
+    
+    리스폰스 헤더는 status-line에서 제공하지 못하는 추가적인 정보를 전달하기 위해 사용한다
+    
+    → 그러므로 서버에서 클라이언트에 보내는 응답에 대한 설명을 여기다 추가해도 괜찮을 것 같다.
+    
+    - Age
+        
+        ```sql
+        Age : <Age-Value>
+        ```
+        
+        이 헤더는 객체가 프록시 서버에 머문 시간으로 캐시 신선도를 표현한다.
+        
+    - ETag
+        
+        ```sql
+        ETag : <Entity-Tag>
+        ```
+        
+        이 헤더는 entity의 태그의 현재값을 나타내며, 같은 리소스임을 확인하기 위해 사용된다
+        
+    - Location
+        
+        ```sql
+        Location : <absolute url>
+        ```
+        
+        이 헤더는 리다이렉션 시 이동할 url을 지정하기 위해 사용된다.
+        
+        Status-Code가 다음일 때,
+        
+        - 201: 새로 생성된 객체의 url을 지정한다
+        - 3XX: 리다이렉션될 url을 지정한다
+    - Proxy-Authenticate
+    - Retry-After
+    - Server
+    - Vary
+    - WWW-Authenticate
+        
+        
 3. Message Body
 
 # 클라이언트의 IP식별
