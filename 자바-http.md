@@ -1,3 +1,5 @@
+# java & http
+
 # HTTP/1.1 ([RFC 7231](https://datatracker.ietf.org/doc/html/rfc7231))
 
 ## 정의
@@ -364,7 +366,31 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
     - Proxy-Authenticate
     - Retry-After
     - Server
+        
+        ```sql
+        Server : 1*( product | comment )
+        ```
+        
+        이 헤더는 origin 서버에서 사용되는 서버의 정보를 표기하기 위해 사용된다. 프록시 서버는 origin 서버의 정보를 훼손하지 않아야 하므로, 서버에서 설정한 값이 그대로 전달되게 된다. 
+        
+        요즘은 Server 정보를 숨기는 것이 주요 보안사항으로, SpringBoot 에서는 다음처럼 [application.properties](http://application.properties) 를 수정하여 숨길 수 있다
+        
+        ```sql
+        server.server-header=server
+        ```
+        
     - Vary
+        
+        ```sql
+        Vary : ( "*" | 1#field-name )
+        ```
+        
+        이 헤더는 캐시된 페이지를 사용해도 되는지 판단하기 전에 확인해야할 요청 헤더 목록을 나타낸다. 
+        
+        예를 들어 Accept-Language헤더에 따라 다른 값을 제공한다면Accept-Language를 적을 수 있다. 이 경우, 프록시 서버는 요청 헤더의 Accept-Language가 저장된 페이지의 Accept-Language와 다른 경우, origin 서버에 해당 페이지를 다시 요청하게 된다.
+        
+        *를 쓰게 되면, 프록시 서버들은 Accept-Language, Accept-Encoding, User-Agent, Referer 등 모든 조합이 모두 일치하는 페이지를 가질 때만 해당 페이지를 재사용하게 되므로, 대부분의 경우 모든 요청을 받으면 origin 서버에서 원본을 찾아 돌려주게 될 것이다. 따라서 *은 안쓰는 것이 좋다.
+        
     - WWW-Authenticate
         
         
