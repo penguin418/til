@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p><a href="/easter-egg">goto easter egg("/easter-egg")</a></p>
+<p><a href="/">goto 404 page("/")</a></p>
+<p><a href="/auth">goto auth page("/auth")</a></p>
+<p><a href="/secure">goto secure page("/secure")</a></p>
+resources/webroot/custom/auth.html
+<div>
+    <p id="loginState">loginState=unknown</p>
+    <button onclick="authenticate();check_authorization()">authenticate</button>
+    <button onclick="un_authenticate();check_authorization()">un-authenticate</button>
+</div>
+<script>
+  function get_cookie(name){
+    return document.cookie.split(';').some(c => {
+      return c.trim().startsWith(name + '=')
+    });
+  }
+  function delete_cookie( name, path, domain ) {
+    if( get_cookie( name ) ) {
+      document.cookie = name + "=" +
+        ((path) ? ";path="+path:"")+
+        ((domain)?";domain="+domain:"") +
+        ";expires=Thu, 01 Jan 1970 00:00:01 GMT"
+    }
+  }
+  function set_cookie(cookie_name, value) {
+    document.cookie = cookie_name + '=' + escape(value)
+  }
+  function authenticate(){
+    set_cookie('Authorization', 'Bearer HelloWorld')
+  }
+  function un_authenticate(){
+    delete_cookie('Authorization')
+  }
+  function check_authorization(){
+    if (get_cookie('Authorization')){
+        document.querySelector('#loginState').innerHTML='loginState=True'
+    }else{
+        document.querySelector('#loginState').innerHTML='loginState=False'
+    }
+  }
+  check_authorization()
+</script>
+</body>
+</html>
