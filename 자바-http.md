@@ -393,7 +393,41 @@ html 문서 교환용 통신규약으로 request, response message 모두를 포
         
     - WWW-Authenticate
         
+        ```bash
+        WWW-Authenticate : 1#challenge
+        ```
         
+        이 헤더는 인증 없는 클라이언트의 인증이 필요한 리소스 요청에 대한 응답으로, Status-Code가 401이어야 한다.
+        
+        challenge는 1개 이상 입력될 수 있고 각 challenge는 ,(쉼표)로 구분된다.
+        
+        - challenge
+            
+            ```bash
+            <auth-scheme> [옵션]
+            ```
+            
+            - auth-scheme
+                
+                인증 방법이다. 종류로는 basic, digest, hoba, mutual, negotiate 등이 있다. 각 종류에 따라 필요한 옵션이 다르다.
+                
+                예를 들어, Basic의 경우는 다음의 옵션을 사용가능하다
+                
+                ```bash
+                WWW-Authenticate : Basic realm=account.example.com charset="UTF-8"
+                ```
+                
+                여기서 realm은 보호된 영역으로, 적혀있지 않다면 브라우저는 hostname(example.com이 될 것이다)으로 유추한다. realm에 적힌 영역에 대해선 같은 인증을 사용할 수 있다. charset은 그냥 charset이다.
+                
+        
+        → 그런데, 클라이언트에서 사용하라고 만든 헤더치고는 웹페이지에서 WWW-Authenticate 헤더를 사용하는 곳을 거의 못본 것 같다. google, facebook, amazon, naver, kakao 모두, 401대신 404페이지를 출력하거나, 302를 사용해 로그인 페이지로 이동시켰다. 
+        
+        → WWW-Authenticate 헤더는 웹페이지보다는 REST-API쪽에서만 사용되는 것 같다.
+        
+        출처: 
+        
+        - [https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate)
+        - [https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes)
 3. Message Body
 
 # 클라이언트의 IP식별
