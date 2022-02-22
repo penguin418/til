@@ -5,25 +5,24 @@ import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.management.MBeanRegistration;
-
-import java.util.Arrays;
 import java.util.Set;
 
 import static io.vertx.ext.web.handler.StaticHandler.DEFAULT_WEB_ROOT;
 
 @Slf4j
 public class CustomWebserverVerticle extends AbstractVerticle {
+    private final String CUSTOM_WEBROOT = "custom-webroot";
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
         log.info("start");
 
         Router router = Router.router(vertx);
+        // webroot 를 지정하고, 자동 라우팅하지 않을 수도 있다.
+        StaticHandler.create(CUSTOM_WEBROOT).setCachingEnabled(false);
         // 다음 패턴을 사용해서 모든 요청을 검사할 수 있다.
         router.route().handler(ctx->{
             log.info("request: " + ctx.request().absoluteURI());
@@ -33,13 +32,13 @@ public class CustomWebserverVerticle extends AbstractVerticle {
         // 수동 라우팅
         router.get("/easter-egg").handler(ctx->{
            log.info("easter egg!");
-           ctx.response().sendFile(DEFAULT_WEB_ROOT + "/custom/easter-egg.html");
+           ctx.response().sendFile(CUSTOM_WEBROOT + "/easter-egg.html");
         });
 
         // 수동 라우팅 - 인증 페이지
         router.get("/auth").handler(ctx->{
             log.info("auth");
-            ctx.response().sendFile(DEFAULT_WEB_ROOT + "/custom/auth.html");
+            ctx.response().sendFile(CUSTOM_WEBROOT + "/auth.html");
         });
 
         // 수동 라우팅 - 중요 페이지
@@ -56,7 +55,7 @@ public class CustomWebserverVerticle extends AbstractVerticle {
                 if (authorization.equals("Bearer%20HelloWorld")){
                     // 헤더에 값이 제대로 들어있다면 페이지 보여줌
                     log.info("has Authorization header and right Authentication");
-                    ctx.response().sendFile(DEFAULT_WEB_ROOT + "/custom/secure.html");
+                    ctx.response().sendFile(CUSTOM_WEBROOT + "/secure.html");
                     return;
                 }
             }
@@ -84,13 +83,13 @@ public class CustomWebserverVerticle extends AbstractVerticle {
                 switch (ctx.statusCode()) {
                     case 401:
                         response.putHeader("WWW-Authenticate", "Bearer")
-                                .sendFile(DEFAULT_WEB_ROOT + "/custom/401.html");
+                                .sendFile(CUSTOM_WEBROOT + "/401.html");
                         break;
                     case 404:
-                        response.sendFile(DEFAULT_WEB_ROOT + "/custom/404.html");
+                        response.sendFile(CUSTOM_WEBROOT + "/404.html");
                         break;
                     default:
-                        response.sendFile(DEFAULT_WEB_ROOT + "/custom/500.html");
+                        response.sendFile(CUSTOM_WEBROOT + "/500.html");
                 }
         });
 
