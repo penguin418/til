@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+    <script src='https://unpkg.io/@vertx/eventbus-bridge-client.js@1.0.0-1/vertx-eventbus.js'></script>
+    <title>index.html</title>
+</head>
+<body>
+
+/resources/sockjs-webroot/index.html
+<div>
+    <div id="chat">
+        <p id="msg-template" hidden></p>
+    </div>
+    <form>
+        <input id="msg">
+        <button type="button" onclick="send();">send</button>
+    </form>
+</div>
+<script>
+    registerHandler();
+
+    let eventBus;
+    function registerHandler(){
+        console.log('registerHandler');
+        eventBus = new EventBus('http://localhost:8085/eventbus');
+        eventBus.onopen = (() => {
+            console.log('on-open');
+            eventBus.registerHandler('msg.to.client', (err,evt)=>{
+                const msg = evt.body;
+                printMsg(msg);
+            });
+        });
+    }
+
+
+    function send(){
+        let msg = document.querySelector('#msg').value
+        document.querySelector('#msg').value = null;
+        eventBus.send('msg.to.server', msg);
+    }
+
+    function printMsg(msg){
+        const newMsg = document.querySelector('#msg-template').cloneNode();
+        newMsg.removeAttribute('hidden');
+        newMsg.removeAttribute('id');
+        newMsg.textContent += msg;
+        document.querySelector('#chat').appendChild(newMsg);
+    }
+
+    // 편의사항
+    document.querySelector('#msg').onkeypress = (e)=>{
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            e.preventDefault();
+            send();
+        }
+    }
+</script>
+</body>
+</html>
