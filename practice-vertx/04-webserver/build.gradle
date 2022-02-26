@@ -4,6 +4,10 @@ dependencies {
     implementation 'io.vertx:vertx-web-templ-thymeleaf:4.2.1'
     testImplementation 'io.vertx:vertx-junit5:4.2.1'
     implementation 'org.slf4j:slf4j-simple:1.7.33'
+
+    // used for cors
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.4"
+
 }
 tasks.test{
     useJUnitPlatform()

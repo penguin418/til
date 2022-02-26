@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index.html</title>
+    <style>
+        table{
+            width: 100%;
+        }
+        table, th, td{
+            border-collapse: collapse;
+            border: 2px solid;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body onload="init();">
+/resources/cors-webroot/index.html
+<div>
+    <table>
+        <thead>
+            <td>localhost:8085</td>
+            <td>localhost:8086</td>
+        </thead>
+        <tr>
+            <td>
+                <button type="button" onclick="addItem(8085)">addItem</button>
+                <button type="button" onclick="getItems(8085)">getItems</button>
+            </td>
+            <td>
+                <button type="button" onclick="addItem(8086)">addItem</button>
+                <button type="button" onclick="getItems(8086)">getItems</button>
+            </td>
+        </tr>
+        <tr>
+            <td >
+                <pre id="items8085"></pre>
+            </td>
+            <td>
+                <pre  id="items8086"></pre>
+            </td>
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>
+<script>
+    function init(){
+        getItems(8085);
+        getItems(8086);
+    }
+    function addItem(port){
+        const url = 'http://localhost:'+port+'/items';
+
+        let randoms = new Uint32Array(1);
+        window.crypto.getRandomValues(randoms);
+        const newItemName = 'item-'+randoms[0];
+        fetch(url,{
+            method: 'post',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({'itemName': newItemName})
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            console.log('url', url, 'data', data)
+            getItems(port);
+        })
+        .catch(err=>{
+            console.log('url', url, 'err', err)
+        });
+    }
+    function getItems(port){
+        const url = 'http://localhost:'+port+'/items';
+
+        let randoms = new Uint32Array(1);
+        window.crypto.getRandomValues(randoms);
+        const newItemName = 'item-'+randoms[0];
+        fetch(url)
+        .then(res=>res.json())
+        .then(data=>{
+            console.log('url', url, 'data', data)
+            document.querySelector('#items'+port).innerHTML = JSON.stringify(data,null,2);
+        })
+        .catch(err=>{
+            console.log('url', url, 'err', err)
+        });
+    }
+</script>
