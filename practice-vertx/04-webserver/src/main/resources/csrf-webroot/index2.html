@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>index.html</title>
+    <meta id="csrf" name="csrf" th:content="${csrf}"/>
+    <meta id="csrf-header" name="csrf-header" th:content="${csrf_header}"/>
+
+</head>
+<body>
+/resources/csrf-webroot/index.html
+<div>
+    <form class="submit-only" action="/post" method="post">
+        <input type="text" th:id="${csrf_header}" th:name="${csrf_header}" th:value="${csrf}" hidden>
+        <button>with csrf2</button>
+    </form>
+    <form class="submit-only" action="/post" method="post">
+        <button>without csrf</button>
+    </form>
+</div>
+<div>
+    result
+    <pre id="result"></pre>
+</div>
+<script>
+    const submitOnlyList = document.querySelectorAll('.submit-only');
+    Array.from(submitOnlyList).forEach(elem=>{
+        elem.addEventListener('submit', async (e)=>{
+            e.preventDefault();
+            const form = e.target;
+
+            // 결과 가져오기
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: new FormData(form)
+            });
+
+            // 403 에러 처리
+            if (! response.ok){
+               console.log(response);
+               printResult(response);
+               return;
+            }
+
+            // 출력
+            const data = await response.json();
+            printResult(data);
+        });
+    }, false);
+
+    function printResult(result){
+        let prettyResult = '';
+        for (const [key, value] of Object.entries(result)) {
+          prettyResult += `${key}: ${value}`;
+        }
+        document.querySelector('#result').innerHTML = prettyResult;
+    }
+</script>
+</body>
+</html>

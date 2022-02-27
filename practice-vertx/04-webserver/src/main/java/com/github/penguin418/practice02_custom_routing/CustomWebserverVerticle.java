@@ -1,4 +1,4 @@
-package com.github.penguin418;
+package com.github.penguin418.practice02_custom_routing;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -10,8 +10,6 @@ import io.vertx.ext.web.handler.StaticHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
-
-import static io.vertx.ext.web.handler.StaticHandler.DEFAULT_WEB_ROOT;
 
 @Slf4j
 public class CustomWebserverVerticle extends AbstractVerticle {

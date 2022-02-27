@@ -1,4 +1,4 @@
-package com.github.penguin418;
+package com.github.penguin418.practice01_basis;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;

@@ -24,7 +24,7 @@
     let eventBus;
     function registerHandler(){
         console.log('registerHandler');
-        eventBus = new EventBus('http://localhost:8085/eventbus');
+        eventBus = new EventBus('http://localhost:8084/eventbus');
         eventBus.onopen = (() => {
             console.log('on-open');
             eventBus.registerHandler('msg.to.client', (err,evt)=>{

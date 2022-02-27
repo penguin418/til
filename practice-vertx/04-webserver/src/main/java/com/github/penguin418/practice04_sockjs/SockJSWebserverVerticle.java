@@ -1,23 +1,16 @@
-package com.github.penguin418;
+package com.github.penguin418.practice04_sockjs;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.bridge.BridgeOptions;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
-import io.vertx.ext.web.handler.sockjs.BridgeEvent;
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.logging.SocketHandler;
 
 @Slf4j
 public class SockJSWebserverVerticle extends AbstractVerticle {
@@ -39,7 +32,7 @@ public class SockJSWebserverVerticle extends AbstractVerticle {
         registerSocketEvent1(options);
         router.mountSubRouter("/eventbus", socketHandler.bridge(options));
 
-        vertx.createHttpServer().requestHandler(router).listen(8085);
+        vertx.createHttpServer().requestHandler(router).listen(8084);
     }
 
     // 원하는 만큼 이벤트 추가
