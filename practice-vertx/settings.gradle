@@ -4,4 +4,5 @@ include '01-future-retry'
 include '02-verticle'
 include '03-deployment'
 include '04-webserver'
+include '05-webclient'
 
