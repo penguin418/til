@@ -34,6 +34,8 @@ public class TodoApis {
                 .send()
                 .onSuccess(response -> {
                     if (response.statusCode() == 200) {
+                        if (! response.getHeader("content-type").equals("application/json"))
+                            promise.fail(JsonPlaceHolderError.OBJECT_NOT_SUPPORTED_TYPE.exception());
                         try {
                             JsonArray bodys = response.bodyAsJsonArray();
                             Todo[] todos = mapper.readValue(bodys.encode(), Todo[].class);

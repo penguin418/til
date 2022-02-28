@@ -15,6 +15,7 @@ public enum JsonPlaceHolderError {
     INVALID_PERMISSION_MISSING_AUTHORIZATION(201, "잘못된 권한: 권한 정보 누락"),
     INVALID_PERMISSION_INSUFFICIENT_PERMISSION(202, "잘못된 권한: 권한이 부족함"),
     OBJECT_NOT_FOUND(301, "대상을 찾을 수 없음"),
+    OBJECT_NOT_SUPPORTED_TYPE(302, "대상의 타입을 지워하지 않음"),
     SERVER_BUSY(401, "서버가 바쁨"),
     SERVER_DOWN(402, "서버 죽음"),
     UNKNOWN(999,"모름");
