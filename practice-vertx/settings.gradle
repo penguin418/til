@@ -6,4 +6,5 @@ include '03-deployment'
 include '04-webserver'
 include '05-webclient'
 include '06-authentication'
+include '07-storage'
 
