@@ -1,0 +1,18 @@
+dependencies {
+    implementation 'io.vertx:vertx-core:4.2.1'
+    testImplementation 'io.vertx:vertx-junit5:4.2.1'
+
+    implementation 'org.slf4j:slf4j-simple:1.7.33'
+}
+tasks.test{
+    useJUnitPlatform()
+}
+jar{
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest{
+        attributes 'Main-Class': 'com.github.penguin418.practice04_start_with_commandline.CommandLineVerticle'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
