@@ -1,4 +1,4 @@
-package com.github.penguin418;
+package com.github.penguin418.practice01_start_with_starter_verticle;
 
 import io.vertx.core.Vertx;
 

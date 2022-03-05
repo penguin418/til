@@ -1,0 +1,18 @@
+// 추가된 플러그인
+plugins{
+    id 'io.vertx.vertx-plugin' version '1.3.0'
+}
+dependencies {
+    implementation 'io.vertx:vertx-core:4.2.1'
+    testImplementation 'io.vertx:vertx-junit5:4.2.1'
+
+    implementation 'org.slf4j:slf4j-simple:1.7.33'
+}
+tasks.test{
+    useJUnitPlatform()
+}
+// 플러그인 사용을 위해 필수 세팅
+// 그리고, jar 대신 shadowjar 을 사용해야 한다
+vertx{
+    mainVerticle = 'com.github.penguin418.practice03_start_with_plugin.SampleVerticle'
+}
