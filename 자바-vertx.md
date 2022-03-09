@@ -1,5 +1,3 @@
-# vert.x
-
 # 버전 및 환경
 
 자바11, vert.x 4.1.5
@@ -70,3 +68,27 @@ verticle을 쉽게 빌드하려면, `vertx-plugin`을 사용하면 좋습니당.
     - VertxOptions::setBlockedThreadCheckInterval() 로 대기시간 연장
     - Vertx::executeBlocking()으로 실행
     - WorkerExecuter::executeBlocking()으로 실행
+5. Worker Verticle
+    
+    일반 Verticle은 ELP에서 순서대로 수행되므로, 긴 작업을 처리하기에는 효율적이지 못하다. Worker Verticle은 이를 극복하기 위해 만든 것으로 Thread Pool에서 비동기로 실행되는 Verticle이다. 
+    
+    해당 작업만 worker pool로 실행되는 executeBlocking과 달리 작업이 끝나도 종료되지 않고, verticle자체를 workerPool에 넣음
+    
+    Worker 전용 쓰레드는 기본적으로 20개가 존재.
+    
+6. 포트 공유
+    
+    같은 Vertx Instance 는 하나의 포트를 공유할 수 있다
+    
+
+## Vert.x 의 구성
+
+Verticle Instance를 생성할 때마다 하나의 eventloop-thread가 할당됨
+
+- EventLoop Thread
+    
+    Vertx 의 기본 쓰레드 구성
+    
+    main (자바 기본 쓰레드)
+    
+    vertx-eventloop-thread0, ...vertx-eventloop-threadn: 코어 수 * 2 만큼 자동 생성되는 쓰레드
