@@ -10,4 +10,6 @@ include '05-webclient'
 include '06-authentication'
 include '07-storage'
 include '08-eventbus'
+include '09-cluster'
+include '10-service-proxy'
 
