@@ -15,4 +15,5 @@ include 'TemplateMethod'
 include 'ThreadSafeSingleton'
 include 'Proxy'
 include 'RemoteProxy'
+include 'ProtectionProxy'
 
