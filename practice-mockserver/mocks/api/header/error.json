@@ -1,0 +1,7 @@
+{
+    "returnType": "json file",
+    "filePath": "~/api/header/error.json",
+    "hasAuth": false,
+    "reason": "you don't have a authorization header.",
+    "solution":"set authorization=1"
+}

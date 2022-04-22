@@ -1,0 +1,20 @@
+<html>
+    <body>
+        <ul>
+            <li><a href="/">GET /</a> (here)</li>
+            <li><a href="/path">GET /path</a></li>
+            <li><a href="/api/header">GET /api/header</a></li>
+            <li><a href="/api/header">GET /api/header (with setting authorization header with 1)</a></li>
+            <li><a href="/api/jsonFile">GET /api/jsonFile</a></li>
+            <li><a href="/api/jsonFile">GET /api/jsonString</a></li>
+        </ul>
+        <h1>mockserver</h1>
+        <div>
+            this server can be run by
+        </div>
+        <ul>
+            <li>yarn mocks</li>
+            <li>MOCK_HEADERS=custom-header,authorization mockserver -m ./mocks -p 8888</li>
+        </ul>
+    </body>
+</html>

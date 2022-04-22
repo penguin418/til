@@ -1,0 +1,5 @@
+{
+    "returnType": "json file",
+    "filePath": "~/api/header/data.json",
+    "hasAuth": true
+}

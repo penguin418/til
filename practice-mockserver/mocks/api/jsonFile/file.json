@@ -1,0 +1,5 @@
+{
+    "returnType": "json file",
+    "filePath": "~/mocks/api/jsonFile/file.json",
+    "howToUse": "#import 'file.json';"
+}
