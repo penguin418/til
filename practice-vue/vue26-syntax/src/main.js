@@ -17,6 +17,14 @@ const router = new VueRouter({
       path: "/home",
       component: require("@/components/HomeView.vue").default,
     },
+    {
+      path: "/:dirName/:fileName",
+      component: require("@/components/MarkdownViewer").default,
+      props: (route) => ({
+        dirName: route.params.dirName,
+        fileName: route.params.fileName,
+      }),
+    },
   ],
 });
 
