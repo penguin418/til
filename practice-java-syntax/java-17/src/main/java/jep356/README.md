@@ -45,7 +45,7 @@ LXM 유형: 기존 SplittableRandom 에서 사용하던 SplitMix 보다 효율�
   * L128X256MixRandom
   * L128X1024MixRandom 
    
-Xoshiro 유형: XOR/shift/rotate 을 사용한 빠른 랜덤 알고리즘
+Xoshiro 유형, Xoroshiro 유형: XOR/shift/rotate 을 사용한 빠른 랜덤 알고리즘
 * Xoshiro256PlusPlus
 * Xoroshiro128PlusPlus
 
@@ -68,3 +68,25 @@ RandomGeneratorFactory.all()
     .sorted()
     .forEach(System.out::println);
 ```
+
+| 알고리즘                  | stateBits  | statistical | stochastic | splittable | streamable | jumpable | leapable | thread-safe |
+|-----------------------|------------|-------------|------------|------------|------------|----------|----------|-------------|
+| Random                | 48         | O           |            |            |            |          |          | O           |
+| SecureRandom          | 2147483647 |             | O          |            |            |          |          | O           |
+| SplittableRandom      | 64         | O           |            | O          | O          |          |          |             |
+| L32X64MixRandom       | 96         | O           |            | O          | O          |          |          |             |
+| L32X64StarStarRandom  | 96         | O           |            | O          | O          |          |          |             |
+| L64X128MixRandom      | 192        | O           |            | O          | O          |          |          |             |
+| L64X128StarStarRandom | 192        | O           |            | O          | O          |          |          |             |
+| L64X256MixRandom      | 320        | O           |            | O          | O          |          |          |             |
+| L64X1024MixRandom     | 1088       | O           |            | O          | O          |          |          |             |
+| L128X128MixRandom     | 256        | O           |            | O          | O          |          |          |             |
+| L128X256MixRandom     | 384        | O           |            | O          | O          |          |          |             |
+| L128X1024MixRandom    | 1152       | O           |            | O          | O          |          |          |             |
+| Xoroshiro128PlusPlus  | 128        | O           |            |            | O          | O        | O        |             |
+| Xoshiro256PlusPlus    | 256        | O           |            |            | O          | O        | O        |             |
+
+* statistical : 통계적으로 어느 정도 유의미.
+* stochastic : 시간에 따라 다른 값 생성 가능
+* splittable : (f/j 또는 쓰레드풀에서 실행할 때를 위해) generator의 자식을 split 가능
+* jummpable, leapable : 미리 정한 횟수(2^64)만큼 추첨을 뛰어넘기 가능. (leapable은 더 많이 뛰어 넘을 수 있다는 뜻)
