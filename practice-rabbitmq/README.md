@@ -3,6 +3,10 @@
 ## spring-rabbitmq-monolith
 스프링 rabitmq 예제 실습
 
+## spring-rabbitmq-monolith
+스프링 rabitmq 활용 이메일 서비스 구성
+* 이메일 처럼 sendmail 또는 Postfix 같은 외부 서비스와 통신하는 서비스는 지연이 발생가능하므로, 느슨한 연결로 구성해야 함.
+
 # RabbitMQ 
 
 ## 용어
