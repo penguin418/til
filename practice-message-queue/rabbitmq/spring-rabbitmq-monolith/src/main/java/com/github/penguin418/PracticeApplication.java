@@ -2,6 +2,7 @@ package com.github.penguin418;
 
 import com.github.penguin418.model.RequestA;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -33,6 +34,7 @@ public class PracticeApplication {
                         RequestA message = new RequestA();
                         message.setText("do job[" + i + "]");
                         log.info("send message :{}", message);
+                        new MessageProperties().setExpiration();
                         rabbitTemplate.convertAndSend(TOPIC_NAME, TASK1_ROUTING_KEY, message);
                     });
         };
