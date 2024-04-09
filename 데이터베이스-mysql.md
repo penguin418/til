@@ -252,7 +252,7 @@ drop database new_db
     
 - 데이터 저장방식
     
-    기본키를 기준으로 클러스터링 되어 저장된다. 기본키 조회가 매우 빠르다
+    PK가 Clustered Index로 작동하여 기본키 순서대로 물리적으로 저장된다. 기본키 조회가 매우 빠르다
     
 - Multi Version Concurrency Control
     
@@ -302,8 +302,17 @@ create table new_table(
     
     AI 사용시 장점
     
-    - 고속 병행 Insert가능
-    - 
+    - 고속 병행 Insert가능 
+
+- Unique Key
+    
+    중복을 허용하지 않는다
+    
+    Primary Key와 다르게 Null을 허용한다
+
+- Foreign Key
+
+  
     
 
 ### 데이터베이스 조회
@@ -537,32 +546,79 @@ explain select * from account;
 - id: 쿼리 아이디
 - table: 사용된 테이블
 - select_type: 쿼리 종류
-    
-    simple: 심플한 쿼리
-    
-    primary: 서브 쿼리에서 가장 바깥 쿼리
-    
-    union: union쿼리이 사용된 쿼리
-    
-    union result: union쿼리로 생성된 임시 테이블
-    
-    dependent union: 외부 쿼리의 결과에 의존하는 union 쿼리
-    
-    derived: from쿼리에서 사용된 쿼리
-    
-    subquery: from쿼리 제외 사용된 쿼리
-    
-    dependent subquery: 외부 쿼리의 결과에 의존하는 서브쿼리
-    
-    uncacheable subquery: 캐시가 안되는 서브쿼리
-    
+  - simple: 심플한 쿼리 
+  - primary: 서브 쿼리에서 가장 바깥 쿼리
+  - union: union쿼리이 사용된 쿼리
+  - union result: union쿼리로 생성된 임시 테이블
+  - dependent union: 외부 쿼리의 결과에 의존하는 union 쿼리
+  - derived: from쿼리에서 사용된 쿼리
+  - subquery: from쿼리 제외 사용된 쿼리
+  - dependent subquery: 외부 쿼리의 결과에 의존하는 서브쿼리
+  - uncacheable subquery: 캐시가 안되는 서브쿼리
 - type: 옵티마이저에 의한 조회 방식
+  - system: 데이터가 하나인 테이블을 조회 (제일 효율)
+  - const: pk, unique 조건이 걸린 컬럼(테이블당 하나)을 조회
+  - eq-ref: pk 또는 unique index 를 사용한 조인
     
-    system: 데이터가 하나인 테이블을 조회시
+    최대 하나만 fetch하므로 ref보다 빠름
+  - ref: non-unique index를 사용한 조인. 또는 index를 사용한 `=` 검색
+  - range: index를 사용한 범위 검색
+  - index: index 풀스캔
+  - all: 테이블 풀스캔 (제일 비효율)
+- possible_keys: 사용가능한 인덱스 
+  
+  인덱스가 여러개일 경우, 여러개가 나옴
+
+- key: 실제 사용된 인덱스
+- key_len: 사용된 인덱스 길이(작을수록 좋음)
+- ref: 테이블 컬럼과 인덱스 컬럼이 일치하는지 여부
+- rows: 조회된 행의 수
+- Extra: 추가 정보
+  
+  실행계획에서 가장 중요한 정보
+  - Using index: 인덱스 트리에 있는 정보만 사용해 검색함(제일 효율적)
     
-    const: unique조건이 걸린 컬럼(테이블당 하나)을 조회시
+    쿼리가 단일 인덱스에 포함된 열만 사용할 때 가능
+
+  - Using index condition: 인덱스를 사용해 조건을 빠르게 검색함
+
+    where 절의 조건 중, 인덱스 열만으로 평가할 수 있는 조건을 인덱스 스캔에서 미리 평가함
+
+    위 단계를 통해 걸러진 행만 실제 테이블에서 조회하여 조건을 평가함
+
+    이를 통해 Disk I/O를 줄이고 더 빠르게 조회할 수 있음
+  - Using where: 인덱스 사용됨
+
+    where 절의 조건 중, 인덱스만으로는 필터링할 수 없는 경우, 실제 데이터 행을 읽어 조건을 평가함
+  - Using temporary: 임시 테이블 사용됨
     
-    eq_ref: 
+    임시 테이블은 메모리 또는 Disk 에 생성될 수 있으며, Disk 에 생성되는 경우 쿼리가 매우 느려짐
+    - `SHOW STATUS LIKE 'Created_tmp_disk_tables';` 명령을 통해 임시 테이블이 Disk에 생성된 횟수를 확인 가능
+    - 숫자가 많이 늘어난 경우, 쿼리를 좀더 최적화 시킬 필요가 있음
+    - 임시 테이블의 크기는 `max_table_size`와 `max_heap_table_size`중 작은 값이 사용되므로 둘다 늘려야 함
+    - 레퍼런스: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/proactive-insights.temp-tables.html
+    
+    인덱스 순서와 다른 컬럼 순서로 `group by`가 사용된 경우
+    - `group by`에 사용된 키 순서대로 인덱스를 구성하는 것을 고려해보는 것이 좋음
+
+    `group by` 뒤에 `order by`가 서로 다른 컬럼 순서로 사용된 경우
+    - 정렬을 위해 임시테이블이 사용됨. 
+    - 꼭 정렬이 필요한 경우가 아니라면 `order by null` 을 추가하여 불필요한 자원 소모를 피할수 있음 
+    
+    인덱스가 아닌 컬럼으로 `order by`가 사용된 경우
+
+    복잡한 서브쿼리가 사용된 경우
+
+    윈도우 함수가 사용된 경우
+
+  - Using filesort: 
+    
+    인덱스가 아닌 컬럼으로 `order by` 가 사용된 경우로 최대한 피해야 함. 
+
+    메모리 버퍼에 올려 정렬하므로 메모리를 많이 사용함
+
+  레퍼런스: https://dev.mysql.com/doc/refman/8.0/en/explain-output.html
+  
     
 
 ### 옵티마이저
@@ -616,7 +672,7 @@ join에서 먼저 액세스 되는 테이블을 드라이빙 테이블이라고 
 
 행이 적은 수를 드라이빙 하는 것이 좋음
 
-## 임시테이블
+## 임시테이블 전략
 
 임시테이블을 사용한 조회
 
@@ -628,6 +684,29 @@ create temporary table tmp (id BIGINT) [type=heap]
 -- 조회할 데이터 옮김
 insert into tmp (id)
 select account_id as id from account
+```
+
+## 커버링 인덱스 사용 전략
+커버링 인덱스: 쿼리에 필요한 모든 데이터를 포함한 인덱스 
+- 쿼리에 필요한 모든 컬럼을 포함하는 인덱스를 그 쿼리에 대한 커버링 인덱스라고 함
+- 커버링 인덱스를 사용하면 인덱스만으로 쿼리를 처리할 수 있어서 테이블을 조회할 필요가 없어져서 성능이 향상됨
+- 쿼리 실행의 논리적 순서와 상관 있음:  FROM->JOIN->WHERE->GROUP BY->HAVING->SELECT->ORDER BY
+
+  옵티마이제이션을 거치면 실제 쿼리는 최대한 인덱스를 사용할 수 있도록 최적화됨
+
+  하지만 복잡한 쿼리의 경우 쿼리 옵티마이저가 커버링 인덱스를 사용하지 않을 수 있음. 
+  - 이때 커버링 인덱스를 통해 성능 개선을 시도 가능
+  - 경우에 따라서는 커버링 인덱스를 사용하지 않는 방법이 더 빠를 수도 있으므로, 테스트가 필요함
+
+아래 예시에선 ad_id에 인덱스가 걸려있다고 가정할 때 1번 쿼리보다 2번 쿼리가 더 빠름 (테스트는 1만 row 기준)
+- PK가 클러스터드 인덱스를 구성하는 InnoDB에서는 그 효율이 더 높음 
+
+```sql
+SELECT * FROM ad WHERE client_id = 1234 AND campaign_id = 'cmp-...' ORDER BY ad_id LIMIT 1000, 100;
+
+SELECT * FROM ad WHERE ad_id IN (
+    SELECT ad_id FROM ad WHERE client_id = 1234 AND campaign_id = 'cmp-...' ORDER BY ad_id LIMIT 1000, 100
+);
 ```
 
 # 인덱스
@@ -665,6 +744,26 @@ create index uq_email on account(email);
 
 ```sql
 show index from account;
+```
+
+## 인덱스 사용 전략
+
+### Group By 순서
+
+### 가상 컬럼
+- `GENERATED ALWAYS AS` 문법을 사용하여 가상 컬럼을 생성가능
+  - `STORED`를 사용하면 실제 데이터를 저장하며, 인덱스 대상으로 사용가능
+    
+    (`STORED`를 사용하지 않거나 `VIRTUAL`을 사용하면 조회 시에만 계산됨)
+  - JPA 연동시에는 `insertable = false, updatable = false` 지정하기
+```sql
+ALTER TABLE your_ad_table
+ADD COLUMN headline_text VARCHAR(30) GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(ad, '$.headline'))) STORED,
+ADD COLUMN description_text VARCHAR(45) GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(ad, '$.description'))) STORED;
+
+ALTER TABLE your_ad_table
+ADD FULLTEXT INDEX idx_headline_text (headline_text),
+ADD FULLTEXT INDEX idx_description_text (description_text);
 ```
 
 # 삽입전략
@@ -727,3 +826,4 @@ show index from account;
 # 기타
 
 join이 subselect보다 빠름
+- 이것도 경우에 따라 다른 듯. 항상 테스트
