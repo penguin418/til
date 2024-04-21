@@ -4,7 +4,7 @@
 
 # 개요
 
-non-blocking event-driven 방식의 어플리케이션 프레임워크입니다.
+non-blocking event-driven 방식의 어플리케이션 툴킷입니다.
 
 - 등장 배경
     
